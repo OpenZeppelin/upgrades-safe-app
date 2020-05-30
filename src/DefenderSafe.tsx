@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 
-import { Providers } from './types'
 import proxyABI from './abis/AdminUpgradeabilityProxy'
 import proxyAdminABI from './abis/ProxyAdmin'
 
@@ -9,16 +8,12 @@ import { WidgetWrapper, ButtonContainer } from './components'
 import { ThemeProvider } from 'styled-components'
 import theme from './customTheme'
 
-interface Props {
-  providers: Providers
-}
 
-const DefenderSafe: React.FC<Props> = ({ providers }) => {
+const DefenderSafe = (props: any) => {
   const [proxyAddress, setProxyAddress] = useState<string>('')
   const [newImplementationAddress, setImplementationAddress] = useState<string>('')
   const [proxyAdminAddress, setProxyAdminAddress] = useState<string>('')
-
-  const { web3, safe } = providers
+  const { web3, safe } = props.providers
 
   const handleSubmit = () => {
     buildTx()
@@ -53,27 +48,25 @@ const DefenderSafe: React.FC<Props> = ({ providers }) => {
     let to 
     let data
 
-    console.log(proxyABI)
+    if (proxyAdminAddress) {
+      const proxyAdmin = new Contract(proxyAdminABI, proxyAdminAddress)
+      to = proxyAdminAddress
+      data = proxyAdmin.methods
+        .upgrade(proxyAddress, newImplementationAddress)
+        .encodeABI()
 
-    // if (proxyAdminAddress) {
-    //   const proxyAdmin = new Contract(proxyAdminABI, proxyAdminAddress)
-    //   to = proxyAdminAddress
-    //   data = proxyAdmin.methods
-    //     .upgrade(proxyAddress, newImplementationAddress)
-    //     .encodeABI()
+    } else {
+      const proxy = new Contract(proxyABI, proxyAddress)
+      to = proxyAddress
+      data = proxy.methods
+        .upgradeTo(newImplementationAddress)
+        .encodeABI()
 
-    // } else {
-    //   const proxy = new Contract(proxyABI, proxyAddress)
-    //   to = proxyAddress
-    //   data = proxy.methods
-    //     .upgradeTo(newImplementationAddress)
-    //     .encodeABI()
-
-    // }
+    }
 
     const tx = { to, value, data }
+    console.log(tx)
     safe.sdk.sendTransactions([tx])
-    console.log(tx, safe.info)
   }
 
   return (
