@@ -20,15 +20,15 @@ const App: React.FC = () => {
   }, [safe.sdk])
 
   return (
-      <div>
-          {( ! safe.info
-              ? <DefenderSafe providers={{ web3, safe }} />
-              : <>
-                Loading...<br />
-                <CircularProgress />
-              </>
-          )}
-      </div>
+    <div>
+      {( ! safe.info
+        ? <DefenderSafe providers={{ web3, safe }} />
+        : <>
+          Loading...<br />
+          <CircularProgress />
+        </>
+      )}
+    </div>
   )
 }
 
