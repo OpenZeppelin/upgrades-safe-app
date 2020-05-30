@@ -21,7 +21,7 @@ const App: React.FC = () => {
 
   return (
     <div>
-      {( ! safe.info
+      {( safe.info
         ? <DefenderSafe providers={{ web3, safe }} />
         : <>
           Loading...<br />
