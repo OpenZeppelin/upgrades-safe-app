@@ -1,19 +1,26 @@
 import React, { useState } from 'react'
 
-import proxyABI from './abis/AdminUpgradeabilityProxy'
-import proxyAdminABI from './abis/ProxyAdmin'
+import { Providers } from './types'
+
+import AdminUpgradeabilityProxyABI from './contracts/AdminUpgradeabilityProxy.json'
+import { AdminUpgradeabilityProxy } from './contracts/AdminUpgradeabilityProxy'
+import ProxyAdminABI from './contracts/ProxyAdmin.json'
+import { ProxyAdmin } from './contracts/ProxyAdmin'
 
 import { Button, Title, Section, TextField } from '@gnosis.pm/safe-react-components'
 import { WidgetWrapper, ButtonContainer } from './components'
 import { ThemeProvider } from 'styled-components'
 import theme from './customTheme'
 
+interface Props {
+  providers: Providers
+}
 
-const DefenderSafe = (props: any) => {
+const DefenderSafe: React.FC<Props> = ({ providers }) => {
   const [proxyAddress, setProxyAddress] = useState<string>('')
   const [newImplementationAddress, setImplementationAddress] = useState<string>('')
   const [proxyAdminAddress, setProxyAdminAddress] = useState<string>('')
-  const { web3, safe } = props.providers
+  const { web3, safe } = providers
 
   const handleSubmit = () => {
     buildTx()
@@ -49,14 +56,14 @@ const DefenderSafe = (props: any) => {
     let data
 
     if (proxyAdminAddress) {
-      const proxyAdmin = new Contract(proxyAdminABI, proxyAdminAddress)
+      const proxyAdmin: ProxyAdmin = new Contract(ProxyAdminABI, proxyAdminAddress)
       to = proxyAdminAddress
       data = proxyAdmin.methods
         .upgrade(proxyAddress, newImplementationAddress)
         .encodeABI()
 
     } else {
-      const proxy = new Contract(proxyABI, proxyAddress)
+      const proxy: AdminUpgradeabilityProxy = new Contract(AdminUpgradeabilityProxyABI, proxyAddress)
       to = proxyAddress
       data = proxy.methods
         .upgradeTo(newImplementationAddress)
