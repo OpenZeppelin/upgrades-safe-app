@@ -12,9 +12,11 @@ import theme from './customTheme'
 
 const AdminUpgradeabilityProxyABI = require('./contracts/AdminUpgradeabilityProxy.json')
 const ProxyAdminABI = require('./contracts/ProxyAdmin.json')
+
 interface Props {
   providers: Providers
 }
+
 
 const DefenderSafe: React.FC<Props> = ({ providers }) => {
   const [proxyAddress, setProxyAddress] = useState<string>('')
