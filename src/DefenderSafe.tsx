@@ -50,18 +50,18 @@ const DefenderSafe: React.FC<Props> = ({ providers }) => {
 
   // validation
 
-  const isEmptyOrAddress = (address: string) => {
+  const isEmptyOrAddress = (address: string) : boolean => {
     const isEmpty = !address
     const isAddress = web3.utils.isAddress(address)
 
     return isEmpty || isAddress
   }
 
-  const validateInput = (address: string) => {
+  const validateInput = (address: string) : any => {
     return isEmptyOrAddress(address) ? {} : { error: 'Invalid address' }
   }
 
-  const validateForm = () => {
+  const validateForm = () : boolean => {
     const isProxyValid = web3.utils.isAddress(proxyAddress)
     const isNewImplementationValid = web3.utils.isAddress(newImplementationAddress)
     const isAdminValid = isEmptyOrAddress(proxyAdminAddress)
