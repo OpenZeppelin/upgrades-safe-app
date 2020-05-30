@@ -14,6 +14,8 @@ const App: React.FC = () => {
     info: safeInfo
   }
 
+  console.log(safe.info)
+
   useEffect(() => {
     safe.sdk.addListeners({ onSafeInfo: setSafeInfo })
     return () => safe.sdk.removeListeners()

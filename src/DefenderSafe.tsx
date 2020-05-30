@@ -2,9 +2,7 @@ import React, { useState } from 'react'
 
 import { Providers } from './types'
 
-import AdminUpgradeabilityProxyABI from './contracts/AdminUpgradeabilityProxy.json'
 import { AdminUpgradeabilityProxy } from './contracts/AdminUpgradeabilityProxy'
-import ProxyAdminABI from './contracts/ProxyAdmin.json'
 import { ProxyAdmin } from './contracts/ProxyAdmin'
 
 import { Button, Title, Section, TextField } from '@gnosis.pm/safe-react-components'
@@ -12,6 +10,8 @@ import { WidgetWrapper, ButtonContainer } from './components'
 import { ThemeProvider } from 'styled-components'
 import theme from './customTheme'
 
+const AdminUpgradeabilityProxyABI = require('./contracts/AdminUpgradeabilityProxy.json')
+const ProxyAdminABI = require('./contracts/ProxyAdmin.json')
 interface Props {
   providers: Providers
 }
@@ -64,6 +64,8 @@ const DefenderSafe: React.FC<Props> = ({ providers }) => {
 
     } else {
       const proxy: AdminUpgradeabilityProxy = new Contract(AdminUpgradeabilityProxyABI, proxyAddress)
+      console.log(proxy.methods)
+
       to = proxyAddress
       data = proxy.methods
         .upgradeTo(newImplementationAddress)
