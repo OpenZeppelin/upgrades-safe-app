@@ -22,34 +22,7 @@ const DefenderSafe: React.FC<Props> = ({ providers }) => {
   const [proxyAdminAddress, setProxyAdminAddress] = useState<string>('')
   const { web3, safe } = providers
 
-  const handleSubmit = () => {
-    buildTx()
-  }
-
-  const isValidAddress = (address: string) => {
-    const isEmpty = !address
-    const isAddress = web3.utils.isAddress(address)
-
-    return isEmpty || isAddress
-  }
-
-  const validateInput = (address: string) => {
-    if (! isValidAddress(address)) {
-      return {
-        error: 'Invalid address'
-      }
-    }
-  }
-
-  const isValidForm = () => {
-    const isProxyValid = web3.utils.isAddress(proxyAddress)
-    const isNewImplementationValid = web3.utils.isAddress(newImplementationAddress)
-    const isAdminValid = isValidAddress(proxyAdminAddress)
-
-    return isProxyValid && isNewImplementationValid && isAdminValid
-  }
-
-  const buildTx = () => {
+  const sendTx = () : void => {
     const { Contract } = web3.eth
     const value = 0
     let to 
@@ -61,21 +34,37 @@ const DefenderSafe: React.FC<Props> = ({ providers }) => {
       data = proxyAdmin.methods
         .upgrade(proxyAddress, newImplementationAddress)
         .encodeABI()
-
     } else {
       const proxy: AdminUpgradeabilityProxy = new Contract(AdminUpgradeabilityProxyABI, proxyAddress)
-      console.log(proxy.methods)
-
       to = proxyAddress
       data = proxy.methods
         .upgradeTo(newImplementationAddress)
         .encodeABI()
-
     }
 
     const tx = { to, value, data }
-    console.log(tx)
     safe.sdk.sendTransactions([tx])
+  }
+
+  // validation
+
+  const isEmptyOrAddress = (address: string) => {
+    const isEmpty = !address
+    const isAddress = web3.utils.isAddress(address)
+
+    return isEmpty || isAddress
+  }
+
+  const validateInput = (address: string) => {
+    return isEmptyOrAddress(address) ? {} : { error: 'Invalid address' }
+  }
+
+  const validateForm = () => {
+    const isProxyValid = web3.utils.isAddress(proxyAddress)
+    const isNewImplementationValid = web3.utils.isAddress(newImplementationAddress)
+    const isAdminValid = isEmptyOrAddress(proxyAdminAddress)
+
+    return isProxyValid && isNewImplementationValid && isAdminValid
   }
 
   return (
@@ -121,8 +110,8 @@ const DefenderSafe: React.FC<Props> = ({ providers }) => {
             size='lg'
             color='primary'
             variant='contained'
-            onClick={ handleSubmit }
-            disabled={ ! isValidForm() }
+            onClick={ sendTx }
+            disabled={ ! validateForm() }
           >
             Propose upgrade
           </Button>
