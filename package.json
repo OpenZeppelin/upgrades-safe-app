@@ -2,6 +2,7 @@
   "name": "defender-safe-app",
   "version": "0.1.0",
   "private": true,
+  "homepage": "./",
   "dependencies": {
     "@gnosis.pm/safe-apps-sdk": "^0.1.1",
     "@gnosis.pm/safe-react-components": "^0.1.2",

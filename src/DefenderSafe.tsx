@@ -1,56 +1,24 @@
-import React, { useEffect, useState } from "react"
-import Web3 from "web3"
+import React, { useState } from 'react'
 
-import initSdk, { SafeInfo } from "@gnosis.pm/safe-apps-sdk"
-import { web3Provider } from "./config"
-import proxyABI from "./abis/AdminUpgradeabilityProxy"
-import proxyAdminABI from "./abis/ProxyAdmin"
+import { Providers } from './types'
+import proxyABI from './abis/AdminUpgradeabilityProxy'
+import proxyAdminABI from './abis/ProxyAdmin'
 
-import { Button, Title, Section, TextField } from "@gnosis.pm/safe-react-components"
-import { WidgetWrapper, ButtonContainer } from "./components"
-import { ThemeProvider } from "styled-components"
-import theme from "./customTheme"
+import { Button, Title, Section, TextField } from '@gnosis.pm/safe-react-components'
+import { WidgetWrapper, ButtonContainer } from './components'
+import { ThemeProvider } from 'styled-components'
+import theme from './customTheme'
 
-const web3: any = new Web3(web3Provider)
+interface Props {
+  providers: Providers
+}
 
+const DefenderSafe: React.FC<Props> = ({ providers }) => {
+  const [proxyAddress, setProxyAddress] = useState<string>('')
+  const [newImplementationAddress, setImplementationAddress] = useState<string>('')
+  const [proxyAdminAddress, setProxyAdminAddress] = useState<string>('')
 
-const DefenderSafe = () => {
-  const [safeInfo, setSafeInfo] = useState<SafeInfo>()
-  const [proxyAddress, setProxyAddress] = useState<string>("")
-  const [newImplementationAddress, setImplementationAddress] = useState<string>("")
-  const [proxyAdminAddress, setProxyAdminAddress] = useState<string>("")
-
-  let safeMultisigUrl = []
-  if (process.env.REACT_APP_LOCAL_SAFE_APP_URL) {
-    safeMultisigUrl.push(/http:\/\/localhost:3000/)
-  }
-
-  const [appsSdk] = useState(initSdk(safeMultisigUrl))
-
-  //-- for development purposes with local provider
-  useEffect(() => {
-    if (process.env.REACT_APP_LOCAL_WEB3_PROVIDER) {
-      console.warn("COMPOUND APP: you are using a local web3 provider")
-      const w: any = window
-      w.web3 = new Web3(w.ethereum)
-      w.ethereum.enable()
-      w.web3.eth.getAccounts().then((addresses: Array<string>) => {
-        setSafeInfo({
-          safeAddress: addresses[0],
-          network: "rinkeby",
-          ethBalance: "0.99",
-        })
-      })
-    }
-  }, [])
-
-  useEffect(() => {
-    appsSdk.addListeners({
-      onSafeInfo: setSafeInfo,
-    })
-
-    return () => appsSdk.removeListeners()
-  }, [appsSdk])
+  const { web3, safe } = providers
 
   const handleSubmit = () => {
     buildTx()
@@ -66,7 +34,7 @@ const DefenderSafe = () => {
   const validateInput = (address: string) => {
     if (! isValidAddress(address)) {
       return {
-        error: "Invalid address"
+        error: 'Invalid address'
       }
     }
   }
@@ -85,37 +53,39 @@ const DefenderSafe = () => {
     let to 
     let data
 
-    if (proxyAdminAddress) {
-      const proxyAdmin = new Contract(proxyAdminABI, proxyAdminAddress)
-      to = proxyAdminAddress
-      data = proxyAdmin.methods
-        .upgrade(proxyAddress, newImplementationAddress)
-        .encodeABI()
+    console.log(proxyABI)
 
-    } else {
-      const proxy = new Contract(proxyABI, proxyAddress)
-      to = proxyAddress
-      data = proxy.methods
-        .upgradeTo(newImplementationAddress)
-        .encodeABI()
+    // if (proxyAdminAddress) {
+    //   const proxyAdmin = new Contract(proxyAdminABI, proxyAdminAddress)
+    //   to = proxyAdminAddress
+    //   data = proxyAdmin.methods
+    //     .upgrade(proxyAddress, newImplementationAddress)
+    //     .encodeABI()
 
-    }
+    // } else {
+    //   const proxy = new Contract(proxyABI, proxyAddress)
+    //   to = proxyAddress
+    //   data = proxy.methods
+    //     .upgradeTo(newImplementationAddress)
+    //     .encodeABI()
+
+    // }
 
     const tx = { to, value, data }
-    appsSdk.sendTransactions([tx])
-    console.log(tx, safeInfo)
+    safe.sdk.sendTransactions([tx])
+    console.log(tx, safe.info)
   }
 
   return (
     <ThemeProvider theme={theme}>
       <WidgetWrapper>
-        <Title size="xs">Upgrade proxy implementation</Title>
+        <Title size='xs'>Upgrade proxy implementation</Title>
 
         <Section>
           <div>
             <TextField
-              id="proxy-addres"
-              label="Proxy address"
+              id='proxy-addres'
+              label='Proxy address'
               value={proxyAddress}
               style={{ marginTop: 10 }}
               meta={ validateInput(proxyAddress) }
@@ -124,8 +94,8 @@ const DefenderSafe = () => {
           </div>
           <div>
             <TextField
-              id="implementation-address"
-              label="New implementation address"
+              id='implementation-address'
+              label='New implementation address'
               value={newImplementationAddress}
               meta={ validateInput(newImplementationAddress) }
               style={{ marginTop: 10 }}
@@ -134,8 +104,8 @@ const DefenderSafe = () => {
           </div>
           <div>
             <TextField
-              id="admin-address"
-              label="ProxyAdmin address (optional)"
+              id='admin-address'
+              label='ProxyAdmin address (optional)'
               value={proxyAdminAddress}
               meta={ validateInput(proxyAdminAddress) }
               style={{ marginTop: 10 }}
@@ -146,13 +116,13 @@ const DefenderSafe = () => {
 
         <ButtonContainer>
           <Button
-            size="lg"
-            color="primary"
-            variant="contained"
+            size='lg'
+            color='primary'
+            variant='contained'
             onClick={ handleSubmit }
             disabled={ ! isValidForm() }
           >
-            Upgrade
+            Propose upgrade
           </Button>
         </ButtonContainer>
       </WidgetWrapper>
