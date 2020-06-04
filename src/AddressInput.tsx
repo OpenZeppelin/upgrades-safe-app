@@ -7,17 +7,17 @@ interface Props {
   value: string
   setValue(value: string) : void
   setValid(valid: boolean) : void
-  validate(address: string) : Promise<boolean>
+  validator(address: string) : void
 }
 
-const AddressInput : React.FC<Props> = ({ name, label, value, setValue, setValid, validate }) => {
+const AddressInput : React.FC<Props> = ({ name, label, value, setValue, setValid, validator }) => {
   const [meta, setMeta] = useState<object>({})
 
   useEffect(() => {
     (async () => {
       try {
         if (! value) return
-        await validate(value)
+        await validator(value)
         setValid(true)
         setMeta({})
       } catch (e) {
@@ -25,7 +25,7 @@ const AddressInput : React.FC<Props> = ({ name, label, value, setValue, setValid
         setMeta({ error: e.message })
       }
     })()
-  }, [value, validate, setValid])
+  }, [value, validator, setValid])
 
   return <div>
     <TextField
