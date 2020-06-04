@@ -8,13 +8,11 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 
 const App: React.FC = () => {
   const [safeInfo, setSafeInfo] = useState<SafeInfo>()
-  const web3 = new Web3()
+  const web3 = localWeb3()
   const safe = {
     sdk: initSdk([/.*localhost.*/]),
     info: safeInfo
   }
-
-  console.log(safe.info)
 
   useEffect(() => {
     safe.sdk.addListeners({ onSafeInfo: setSafeInfo })
@@ -32,6 +30,15 @@ const App: React.FC = () => {
       )}
     </div>
   )
+}
+
+
+function localWeb3() : any {
+  const w: any = window
+  const web3 = new Web3(w.ethereum)
+  w.ethereum.enable()
+
+  return web3
 }
 
 export default App

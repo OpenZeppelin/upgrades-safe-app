@@ -4,11 +4,13 @@ import { Providers } from './types'
 
 import { AdminUpgradeabilityProxy } from './contracts/AdminUpgradeabilityProxy'
 import { ProxyAdmin } from './contracts/ProxyAdmin'
+import AddressInput from './AddressInput'
 
-import { Button, Title, Section, TextField } from '@gnosis.pm/safe-react-components'
+import { Button, Title, Section } from '@gnosis.pm/safe-react-components'
 import { WidgetWrapper, ButtonContainer } from './components'
 import { ThemeProvider } from 'styled-components'
 import theme from './customTheme'
+import { hasBytecode, isEmpty } from './utils'
 
 const AdminUpgradeabilityProxyABI = require('./contracts/AdminUpgradeabilityProxy.json')
 const ProxyAdminABI = require('./contracts/ProxyAdmin.json')
@@ -17,15 +19,22 @@ interface Props {
   providers: Providers
 }
 
+type Validator = (address: string) => boolean
 
 const DefenderSafe: React.FC<Props> = ({ providers }) => {
   const [proxyAddress, setProxyAddress] = useState<string>('')
-  const [newImplementationAddress, setImplementationAddress] = useState<string>('')
+  const [newImplementationAddress, setNewImplementationAddress] = useState<string>('')
   const [proxyAdminAddress, setProxyAdminAddress] = useState<string>('')
+
+  const [proxyAddressIsValid, setProxyAddressIsValid] = useState<boolean>(true)
+  const [newImplementationAddressIsValid, setNewImplementationAddressIsValid] = useState<boolean>(true)
+  const [proxyAdminAddressIsValid, setProxyAdminAddressIsValid] = useState<boolean>(true)
+
   const { web3, safe } = providers
+  const { Contract } = web3.eth
+  const { isAddress } = web3.utils
 
   const sendTx = () : void => {
-    const { Contract } = web3.eth
     const value = 0
     let to 
     let data
@@ -48,25 +57,47 @@ const DefenderSafe: React.FC<Props> = ({ providers }) => {
     safe.sdk.sendTransactions([tx])
   }
 
-  // validation
+  // Contract validations
 
-  const isEmptyOrAddress = (address: string) : boolean => {
-    const isEmpty = !address
-    const isAddress = web3.utils.isAddress(address)
-
-    return isEmpty || isAddress
+  const isValidNewImplementation = (code: string) : boolean => {
+    if (! hasBytecode(code)) throw new Error('New implementation has no bytecode')
+    return true
   }
 
-  const validateInput = (address: string) : any => {
-    return isEmptyOrAddress(address) ? {} : { error: 'Invalid address' }
+  const isValidProxy = (code: string) : boolean => {
+    return true
   }
 
-  const validateForm = () : boolean => {
-    const isProxyValid = web3.utils.isAddress(proxyAddress)
-    const isNewImplementationValid = web3.utils.isAddress(newImplementationAddress)
-    const isAdminValid = isEmptyOrAddress(proxyAdminAddress)
+  const isValidProxyAdmin = (code: string) : boolean => {
+    return true
+  }
 
-    return isProxyValid && isNewImplementationValid && isAdminValid
+  // Input validations
+
+  const validateNewImplementationAddress = async (address: string) : Promise<boolean> => {
+    return await validateAddress(address, isValidNewImplementation)
+  }
+
+  const validateProxyAdminAddress = async (address: string) : Promise<boolean> => {
+    return await validateAddress(address, isValidProxyAdmin)
+  }
+
+  const validateProxyAddress = async (address: string) : Promise<boolean> => {
+    return await validateAddress(address, isValidProxy)
+  }
+
+  const validateAddress = async (address: string, validate: Validator) : Promise<boolean> => {
+    if (! isAddress(address)) throw new Error('Invalid address')
+
+    const code = await web3.eth.getCode(address)
+    return validate(code)
+  }
+
+  const formIsValid = () : boolean => {
+    const isNotEmpty = !isEmpty(proxyAddress) && !isEmpty(newImplementationAddress)
+    const inputsAreValid = proxyAddressIsValid && newImplementationAddressIsValid && proxyAdminAddressIsValid
+
+    return isNotEmpty && inputsAreValid
   }
 
   return (
@@ -75,36 +106,32 @@ const DefenderSafe: React.FC<Props> = ({ providers }) => {
         <Title size='xs'>Upgrade proxy implementation</Title>
 
         <Section>
-          <div>
-            <TextField
-              id='proxy-addres'
-              label='Proxy address'
-              value={proxyAddress}
-              style={{ marginTop: 10 }}
-              meta={ validateInput(proxyAddress) }
-              onChange={e => setProxyAddress(e.target.value)}
-            />
-          </div>
-          <div>
-            <TextField
-              id='implementation-address'
-              label='New implementation address'
-              value={newImplementationAddress}
-              meta={ validateInput(newImplementationAddress) }
-              style={{ marginTop: 10 }}
-              onChange={e => setImplementationAddress(e.target.value)}
-            />
-          </div>
-          <div>
-            <TextField
-              id='admin-address'
-              label='ProxyAdmin address (optional)'
-              value={proxyAdminAddress}
-              meta={ validateInput(proxyAdminAddress) }
-              style={{ marginTop: 10 }}
-              onChange={e => setProxyAdminAddress(e.target.value)}
-            />
-          </div>
+          <AddressInput
+            name='proxy'
+            label='Proxy address'
+            value={ proxyAddress }
+            setValue={ setProxyAddress }
+            setValid={ setProxyAddressIsValid }
+            validate={ validateProxyAddress }
+          />
+
+          <AddressInput
+            name='new-implementation'
+            label='New implementation address'
+            value={ newImplementationAddress }
+            setValue={ setNewImplementationAddress }
+            setValid={ setNewImplementationAddressIsValid }
+            validate={ validateNewImplementationAddress }
+          />
+
+          <AddressInput
+            name='admin'
+            label='ProxyAdmin address (optional)'
+            value={ proxyAdminAddress }
+            setValue={ setProxyAdminAddress }
+            setValid={ setProxyAdminAddressIsValid }
+            validate={ validateProxyAdminAddress }
+          />
         </Section>
 
         <ButtonContainer>
@@ -113,7 +140,7 @@ const DefenderSafe: React.FC<Props> = ({ providers }) => {
             color='primary'
             variant='contained'
             onClick={ sendTx }
-            disabled={ ! validateForm() }
+            disabled={ ! formIsValid() }
           >
             Propose upgrade
           </Button>
