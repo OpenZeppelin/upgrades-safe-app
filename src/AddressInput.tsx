@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect } from 'react'
 import { TextField } from '@gnosis.pm/safe-react-components'
 import { Validator, Input } from './types'
 
@@ -27,13 +27,11 @@ export const useAddressInput = (validate: Validator) : Input => {
   const [isValid, setValid] = useState<boolean>(true)
   const [meta, setMeta] = useState<object>({})
 
-  const _isValid = useCallback(validate, [address])
-
   useEffect(() => {
     (async () => {
       try {
         if (! address) return
-        await _isValid(address)
+        await validate(address)
         setValid(true)
         setMeta({})
       } catch (e) {
@@ -41,7 +39,7 @@ export const useAddressInput = (validate: Validator) : Input => {
         setMeta({ error: e.message })
       }
     })()
-  }, [address, _isValid])
+  }, [address])
 
   return { address, setAddress, isValid, meta }
 }

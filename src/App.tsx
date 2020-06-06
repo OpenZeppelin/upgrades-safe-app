@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import initSdk, { SafeInfo } from '@gnosis.pm/safe-apps-sdk'
 
-import DefenderSafe from './DefenderSafe'
+import SafeUpgrades from './SafeUpgrades'
 import CircularProgress from '@material-ui/core/CircularProgress'
 
 
@@ -20,7 +20,7 @@ const App: React.FC = () => {
   return (
     <div>
       {( safe.info
-        ? <DefenderSafe safe={ safe } />
+        ? <SafeUpgrades safe={ safe } />
         : <>
           Loading...<br />
           <CircularProgress />

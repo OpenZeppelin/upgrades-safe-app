@@ -17,7 +17,7 @@ interface Props {
 }
 
 
-const DefenderSafe: React.FC<Props> = ({ safe }) => {
+const SafeUpgrades: React.FC<Props> = ({ safe }) => {
 
   const proxyInput = useAddressInput(async (address: string) => {
     const code = await getCode(address)
@@ -88,4 +88,4 @@ const DefenderSafe: React.FC<Props> = ({ safe }) => {
 }
 
 
-export default DefenderSafe
+export default SafeUpgrades
