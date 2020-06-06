@@ -1,86 +1,47 @@
-import React, { useState } from 'react'
+import React from 'react'
 
-import { Providers } from './types'
+import { SafeProvider } from './types'
 import { hasBytecode, isEmpty } from './utils'
+import { getCode, buildTransaction } from './EthereumBridge'
 
-import { AdminUpgradeabilityProxy } from './contracts/AdminUpgradeabilityProxy'
-import { ProxyAdmin } from './contracts/ProxyAdmin'
 
-import AddressInput from './AddressInput'
-import { Button, Title, Section } from '@gnosis.pm/safe-react-components'
+import useAddressInput from './AddressInput'
+import { Button, Title, Section, TextField } from '@gnosis.pm/safe-react-components'
 import { WidgetWrapper, ButtonContainer } from './components'
 import { ThemeProvider } from 'styled-components'
 import theme from './customTheme'
 
-const AdminUpgradeabilityProxyABI = require('./contracts/AdminUpgradeabilityProxy.json')
-const ProxyAdminABI = require('./contracts/ProxyAdmin.json')
 
 interface Props {
-  providers: Providers
+  safe: SafeProvider
 }
 
 
-const DefenderSafe: React.FC<Props> = ({ providers }) => {
-  const { web3, safe } = providers
+const DefenderSafe: React.FC<Props> = ({ safe }) => {
 
-  const [proxyAddress, setProxyAddress] = useState<string>('')
-  const [newImplementationAddress, setNewImplementationAddress] = useState<string>('')
-  const [proxyAdminAddress, setProxyAdminAddress] = useState<string>('')
-
-  const [proxyAddressIsValid, setProxyAddressIsValid] = useState<boolean>(true)
-  const [newImplementationAddressIsValid, setNewImplementationAddressIsValid] = useState<boolean>(true)
-  const [proxyAdminAddressIsValid, setProxyAdminAddressIsValid] = useState<boolean>(true)
-
-
-  const sendTx = () : void => {
-    const { Contract } = web3.eth
-    const value = 0
-    let to 
-    let data
-
-    if (proxyAdminAddress) {
-      const proxyAdmin: ProxyAdmin = new Contract(ProxyAdminABI, proxyAdminAddress)
-      to = proxyAdminAddress
-      data = proxyAdmin.methods
-        .upgrade(proxyAddress, newImplementationAddress)
-        .encodeABI()
-    } else {
-      const proxy: AdminUpgradeabilityProxy = new Contract(AdminUpgradeabilityProxyABI, proxyAddress)
-      to = proxyAddress
-      data = proxy.methods
-        .upgradeTo(newImplementationAddress)
-        .encodeABI()
-    }
-
-    const tx = { to, value, data }
-    safe.sdk.sendTransactions([tx])
-  }
-
-  const getCode = async (address: string) : Promise<string> => {
-    if (! web3.utils.isAddress(address)) throw new Error('Invalid address')
-    return await web3.eth.getCode(address)
-  }
-
-  // Validations
-
-  const newImplementationValidator = async (address: string) => {
+  const proxyInput = useAddressInput(async (address: string) => {
     const code = await getCode(address)
+    console.log(address, code)
+  })
+
+  const proxyAdminInput = useAddressInput(async (address: string) => {
+    const code = await getCode(address)
+    console.log(address, code)
+  })
+
+  const newImplementationInput = useAddressInput(async (address: string) => {
+    const code = await getCode(address)
+    console.log(address, code)
     if (! hasBytecode(code)) throw new Error('New implementation has no bytecode')
-  }
+  })
 
-  const proxyAdminValidator = async (address: string) => {
-    // const code = await getCode(address)
-  }
+  const isNotEmpty = !isEmpty(proxyInput.address) && !isEmpty(newImplementationInput.address)
+  const inputsAreValid = proxyInput.isValid && newImplementationInput.isValid && proxyAdminInput.isValid
+  const isFormValid = isNotEmpty && inputsAreValid
 
-  const proxyAddressValidator = async (address: string) => {
-    // const code = await getCode(address)
-  }
-
-  const formIsValid = () : boolean => {
-    const isNotEmpty = !isEmpty(proxyAddress) && !isEmpty(newImplementationAddress)
-    const inputsAreValid = proxyAddressIsValid && newImplementationAddressIsValid && proxyAdminAddressIsValid
-
-    return isNotEmpty && inputsAreValid
+  const sendTransaction = () : void => {
+    const tx = buildTransaction(proxyInput.address, newImplementationInput.address, proxyAdminInput.address)
+    safe.sdk.sendTransactions([tx])
   }
 
   return (
@@ -89,32 +50,38 @@ const DefenderSafe: React.FC<Props> = ({ providers }) => {
         <Title size='xs'>Upgrade proxy implementation</Title>
 
         <Section>
-          <AddressInput
-            name='proxy'
-            label='Proxy address'
-            value={ proxyAddress }
-            setValue={ setProxyAddress }
-            setValid={ setProxyAddressIsValid }
-            validator={ proxyAddressValidator }
-          />
+          <div>
+            <TextField
+              id='proxy-address'
+              label='Proxy address'
+              value={ proxyInput.address }
+              meta={ proxyInput.meta }
+              style={{ marginTop: 10 }}
+              onChange={e => proxyInput.setAddress(e.target.value)}
+            />
+          </div>
 
-          <AddressInput
-            name='new-implementation'
-            label='New implementation address'
-            value={ newImplementationAddress }
-            setValue={ setNewImplementationAddress }
-            setValid={ setNewImplementationAddressIsValid }
-            validator={ newImplementationValidator }
-          />
+          <div>
+            <TextField
+              id='new-implementation-address'
+              label='New implementation address'
+              value={ newImplementationInput.address }
+              meta={ newImplementationInput.meta }
+              style={{ marginTop: 10 }}
+              onChange={e => newImplementationInput.setAddress(e.target.value)}
+            />
+          </div>
 
-          <AddressInput
-            name='admin'
-            label='ProxyAdmin address (optional)'
-            value={ proxyAdminAddress }
-            setValue={ setProxyAdminAddress }
-            setValid={ setProxyAdminAddressIsValid }
-            validator={ proxyAdminValidator }
-          />
+          <div>
+            <TextField
+              id='proxy-admin-address'
+              label='Proxy admin address (optional)'
+              value={ proxyAdminInput.address }
+              meta={ proxyAdminInput.meta }
+              style={{ marginTop: 10 }}
+              onChange={e => proxyAdminInput.setAddress(e.target.value)}
+            />
+          </div>
         </Section>
 
         <ButtonContainer>
@@ -122,8 +89,8 @@ const DefenderSafe: React.FC<Props> = ({ providers }) => {
             size='lg'
             color='primary'
             variant='contained'
-            onClick={ sendTx }
-            disabled={ ! formIsValid() }
+            onClick={ sendTransaction }
+            disabled={ ! isFormValid }
           >
             Propose upgrade
           </Button>
@@ -132,5 +99,6 @@ const DefenderSafe: React.FC<Props> = ({ providers }) => {
     </ThemeProvider>
   )
 }
+
 
 export default DefenderSafe
