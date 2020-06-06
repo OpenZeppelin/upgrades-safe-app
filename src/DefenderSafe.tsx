@@ -5,8 +5,8 @@ import { hasBytecode, isEmpty } from './utils'
 import { getCode, buildTransaction } from './EthereumBridge'
 
 
-import useAddressInput from './AddressInput'
-import { Button, Title, Section, TextField } from '@gnosis.pm/safe-react-components'
+import { AddressInput, useAddressInput } from './AddressInput'
+import { Button, Title, Section } from '@gnosis.pm/safe-react-components'
 import { WidgetWrapper, ButtonContainer } from './components'
 import { ThemeProvider } from 'styled-components'
 import theme from './customTheme'
@@ -50,38 +50,25 @@ const DefenderSafe: React.FC<Props> = ({ safe }) => {
         <Title size='xs'>Upgrade proxy implementation</Title>
 
         <Section>
-          <div>
-            <TextField
-              id='proxy-address'
-              label='Proxy address'
-              value={ proxyInput.address }
-              meta={ proxyInput.meta }
-              style={{ marginTop: 10 }}
-              onChange={e => proxyInput.setAddress(e.target.value)}
-            />
-          </div>
 
-          <div>
-            <TextField
-              id='new-implementation-address'
-              label='New implementation address'
-              value={ newImplementationInput.address }
-              meta={ newImplementationInput.meta }
-              style={{ marginTop: 10 }}
-              onChange={e => newImplementationInput.setAddress(e.target.value)}
-            />
-          </div>
+          <AddressInput
+            id='proxy-address'
+            label='Proxy address'
+            input={ proxyInput }
+          />
 
-          <div>
-            <TextField
-              id='proxy-admin-address'
-              label='Proxy admin address (optional)'
-              value={ proxyAdminInput.address }
-              meta={ proxyAdminInput.meta }
-              style={{ marginTop: 10 }}
-              onChange={e => proxyAdminInput.setAddress(e.target.value)}
-            />
-          </div>
+          <AddressInput
+            id='new-implementation-address'
+            label='New implementation address'
+            input={ newImplementationInput }
+          />
+
+          <AddressInput
+            id='proxy-admin-address'
+            label='Proxy admin address (optional)'
+            input={ proxyAdminInput }
+          />
+
         </Section>
 
         <ButtonContainer>
