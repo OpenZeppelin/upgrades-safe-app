@@ -1,13 +1,10 @@
 import { ethers, Contract } from 'ethers'
 import { Provider } from 'ethers/providers'
-import Address from './Address'
 import { Eip1967 } from './Eip1967'
+import Address from './Address'
 
-import { AdminUpgradeabilityProxy } from './contracts/AdminUpgradeabilityProxy'
-import { ProxyAdmin } from './contracts/ProxyAdmin'
-
-const AdminUpgradeabilityProxyABI = require('./contracts/AdminUpgradeabilityProxy.json')
-const ProxyAdminABI = require('./contracts/ProxyAdmin.json')
+const AdminUpgradeabilityProxyABI = require('./abis/AdminUpgradeabilityProxy.json')
+const ProxyAdminABI = require('./abis/ProxyAdmin.json')
 
 
 interface Transaction {
@@ -59,26 +56,29 @@ export default class EthereumBridge {
     return await Eip1967.detect(this, address)
   }
 
-  public buildUpgradeTransaction(proxyAddress: string, newImplementationAddress: string) : Transaction {
-    const value = 0
-    let to = ""
-    let data = ""
+  public buildUpgradeTransaction(proxyAddress: string, newImplementationAddress: string, proxyAdminAddress: string) : Transaction {
+    if (proxyAdminAddress) {
+      return {
+        to: proxyAdminAddress,
+        value: 0,
+        data: this.encodeProxyAdminTx(proxyAddress, newImplementationAddress)
+      }
+    } else {
+      return {
+        to: proxyAddress,
+        value: 0,
+        data: this.encodeProxyTx(newImplementationAddress)
+      }
+    }
+  }
 
-    // if (proxyAdminAddress) {
-    //   const proxyAdmin: ProxyAdmin = new Contract(ProxyAdminABI, proxyAdminAddress)
-    //   to = proxyAdminAddress
-    //   data = proxyAdmin.methods
-    //     .upgrade(proxyAddress, newImplementationAddress)
-    //     .encodeABI()
-    // } else {
-    //   const proxy: AdminUpgradeabilityProxy = new Contract(AdminUpgradeabilityProxyABI, proxyAddress)
-    //   to = proxyAddress
-    //   data = proxy.methods
-    //     .upgradeTo(newImplementationAddress)
-    //     .encodeABI()
-    // }
+  private encodeProxyAdminTx(proxyAddress: string, newImplementationAddress: string) : string {
+    const proxyAdminInterface = new ethers.utils.Interface(ProxyAdminABI)
+    return proxyAdminInterface.functions.upgrade.encode([ proxyAddress, newImplementationAddress ])
+  }
 
-    return { to, data, value }
+  private encodeProxyTx(newImplementationAddress: string) : string {
+    const proxyAddressInterface = new ethers.utils.Interface(AdminUpgradeabilityProxyABI)
+    return proxyAddressInterface.functions.upgradeTo.encode([ newImplementationAddress ])
   }
 }
-

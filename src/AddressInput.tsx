@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { TextField } from '@gnosis.pm/safe-react-components'
 import { Validator, Input } from './types'
-import Address from './Address'
+import Address from './ethereum/Address'
 import { Err } from './Result'
 
 interface Props {

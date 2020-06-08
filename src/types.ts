@@ -1,6 +1,6 @@
 import { SafeInfo, SdkInstance } from '@gnosis.pm/safe-apps-sdk'
 import { Result } from './Result'
-import Address from './Address'
+import Address from './ethereum/Address'
 
 export interface SafeProvider {
   sdk: SdkInstance,

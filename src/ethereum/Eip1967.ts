@@ -1,7 +1,7 @@
 import { hexlify, bigNumberify, id } from 'ethers/utils'
 import Address from './Address'
 import EthereumBridge from './EthereumBridge'
-import duckTypedProxyAdmin from './contracts/DuckTypedProxyAdmin.json'
+import duckTypedProxyAdmin from './abis/DuckTypedProxyAdmin.json'
 import { Contract, ManagedContract, ProxyAdmin } from './Contract'
 
 // Implementation storage
@@ -56,7 +56,7 @@ export class Eip1967 {
     address: Address,
     proxyAdminAddress: Address,
     implementationAddress: Address,
-  ): Promise<ProxyAdmin | (ProxyAdmin & ManagedContract) | null> {
+  ): Promise<(ProxyAdmin & ManagedContract) | null> {
     try {
       const maybeProxyAdmin = bridge.getContract(proxyAdminAddress, duckTypedProxyAdmin)
       const readImplementation = await maybeProxyAdmin.getProxyImplementation(address.toString())

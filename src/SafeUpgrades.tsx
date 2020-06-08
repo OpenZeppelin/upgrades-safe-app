@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
 
-import { SafeProvider, Validation } from './types'
-import { hasBytecode, isEmpty } from './utils'
-import EthereumBridge from './EthereumBridge'
+import Address from './ethereum/Address'
 import { ok, err } from './Result'
-import Address from './Address'
-
-
+import EthereumBridge from './ethereum/EthereumBridge'
+import { SafeProvider, Validation } from './types'
+import { isProxyAdmin, isManaged } from './ethereum/Contract'
 import { AddressInput, useAddressInput } from './AddressInput'
+
+
 import { Button, Title, Section } from '@gnosis.pm/safe-react-components'
 import { WidgetWrapper, ButtonContainer } from './components'
 import { ThemeProvider } from 'styled-components'
@@ -21,28 +21,63 @@ interface Props {
 const ethereumBridge = new EthereumBridge()
 
 const SafeUpgrades: React.FC<Props> = ({ safe }) => {
-  const [proxyAdmin, setProxyAdmin] = useState<string>('')
-  const [currentImplementation, setCurrentImplementation] = useState<string>('')
+  const [proxyAdminAddress, setProxyAdminAddress] = useState<string>('')
+  const [currentImplementationAddress, setCurrentImplementationAddress] = useState<string>('')
+
 
   const proxyInput = useAddressInput(async (address: Address) : Promise<Validation> => {
-    const proxy = await ethereumBridge.detect(address)
+    const Eip1967 = await ethereumBridge.detect(address)
+    const safeAddress = safe.info?.safeAddress
 
-    if (proxy === null) return err('Contract is not an EIP 1967 compatible proxy')
+    if (Eip1967 === null) {
+      return err('This proxy is not EIP 1967 compatible')
+    }
 
+    const { proxy, implementation } = Eip1967
+    const { admin } = proxy
+
+    if (! isProxyAdmin(admin)) {
+      if (admin.address.toString() !== safeAddress) {
+        return err('This proxy is not managed by this Safe')
+      }
+
+      setProxyAdminAddress('')
+
+    } else if (isManaged(admin)) {
+      if (admin.admin.address.toString() !== safeAddress) {
+        return err("This proxy's admin is not managed by this Safe")
+      }
+
+      setProxyAdminAddress(admin.admin.address.toString())
+    }
+
+    setCurrentImplementationAddress(implementation.address.toString())
     return ok(true)
   })
+
 
   const newImplementationInput = useAddressInput(async (address: Address) : Promise<Validation> => {
+    if (currentImplementationAddress === address.toString()) {
+      return err('Proxy already points to this implementation')
+    }
+
     const hasBytecode = await ethereumBridge.hasBytecode(address)
-    if (! hasBytecode) return err('New implementation has no bytecode')
+
+    if (! hasBytecode) {
+      return err('This implementation has no bytecode')
+    }
+
+    const Eip1967 = await ethereumBridge.detect(address)
+    if (Eip1967 !== null) {
+      return err("New implementation can't be a proxy contract")
+    }
 
     return ok(true)
   })
 
-  const isFormValid = proxyInput.isValid && newImplementationInput.isValid
 
   const sendTransaction = () : void => {
-    const tx = ethereumBridge.buildUpgradeTransaction(proxyInput.address, newImplementationInput.address)
+    const tx = ethereumBridge.buildUpgradeTransaction(proxyInput.address, newImplementationInput.address, proxyAdminAddress)
     safe.sdk.sendTransactions([tx])
   }
 
@@ -72,7 +107,7 @@ const SafeUpgrades: React.FC<Props> = ({ safe }) => {
             color='primary'
             variant='contained'
             onClick={ sendTransaction }
-            disabled={ ! isFormValid }
+            disabled={! (proxyInput.isValid && newImplementationInput.isValid) }
           >
             Propose upgrade
           </Button>
