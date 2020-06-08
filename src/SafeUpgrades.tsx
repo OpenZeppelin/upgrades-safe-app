@@ -2,8 +2,7 @@ import React, { useState } from 'react'
 
 import Address from './ethereum/Address'
 import { ok, err } from './Result'
-import EthereumBridge from './ethereum/EthereumBridge'
-import { SafeProvider, Validation } from './types'
+import { SafeUpgradesProps, Validation } from './types'
 import { isProxyAdmin, isManaged } from './ethereum/Contract'
 import { AddressInput, useAddressInput } from './AddressInput'
 
@@ -13,21 +12,16 @@ import { ThemeProvider } from 'styled-components'
 import theme from './customTheme'
 
 
-interface Props {
-  safe: SafeProvider
-}
-
-const SafeUpgrades: React.FC<Props> = ({ safe }) => {
+const SafeUpgrades: React.FC<SafeUpgradesProps> = ({ safe, ethereum }) => {
   const [proxyAdminAddress, setProxyAdminAddress] = useState<string>('')
   const [currentImplementationAddress, setCurrentImplementationAddress] = useState<string>('')
-  const ethereumBridge = new EthereumBridge()
 
 
   const proxyInput = useAddressInput(async (address: Address) : Promise<Validation> => {
     setProxyAdminAddress('')
     setCurrentImplementationAddress('')
 
-    const Eip1967 = await ethereumBridge.detect(address)
+    const Eip1967 = await ethereum.detect(address)
     if (Eip1967 === null) {
       return err('This proxy is not EIP 1967 compatible')
     }
@@ -63,13 +57,13 @@ const SafeUpgrades: React.FC<Props> = ({ safe }) => {
       return err('Proxy already points to this implementation')
     }
 
-    const hasBytecode = await ethereumBridge.hasBytecode(address)
+    const hasBytecode = await ethereum.hasBytecode(address)
 
     if (! hasBytecode) {
       return err('This implementation has no bytecode')
     }
 
-    const Eip1967 = await ethereumBridge.detect(address)
+    const Eip1967 = await ethereum.detect(address)
     if (Eip1967 !== null) {
       return err("New implementation can't be a proxy contract")
     }
@@ -79,7 +73,7 @@ const SafeUpgrades: React.FC<Props> = ({ safe }) => {
 
 
   const sendTransaction = () : void => {
-    const tx = ethereumBridge.buildUpgradeTransaction(proxyInput.address, newImplementationInput.address, proxyAdminAddress)
+    const tx = ethereum.buildUpgradeTransaction(proxyInput.address, newImplementationInput.address, proxyAdminAddress)
     safe.sdk.sendTransactions([tx])
   }
 

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import initSdk, { SafeInfo } from '@gnosis.pm/safe-apps-sdk'
+import EthereumBridge from './ethereum/EthereumBridge'
 
 import SafeUpgrades from './SafeUpgrades'
 import CircularProgress from '@material-ui/core/CircularProgress'
@@ -7,6 +8,7 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 
 const App: React.FC = () => {
   const [safeInfo, setSafeInfo] = useState<SafeInfo>()
+  const ethereum = new EthereumBridge()
   const safe = {
     sdk: initSdk([/.*localhost.*/]),
     info: safeInfo
@@ -20,7 +22,7 @@ const App: React.FC = () => {
   return (
     <div>
       {( safe.info || process.env.NODE_ENV === 'development'
-        ? <SafeUpgrades safe={ safe } />
+        ? <SafeUpgrades safe={ safe } ethereum={ ethereum } />
         : <>
           Loading...<br />
           <CircularProgress />
