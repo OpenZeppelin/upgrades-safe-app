@@ -1,17 +1,11 @@
 import { ethers, Contract } from 'ethers'
 import { Provider } from 'ethers/providers'
 import { Eip1967 } from './Eip1967'
+import { Transaction } from '../types'
 import Address from './Address'
 
 const AdminUpgradeabilityProxyABI = require('./abis/AdminUpgradeabilityProxy.json')
 const ProxyAdminABI = require('./abis/ProxyAdmin.json')
-
-
-interface Transaction {
-  to: string
-  data: string
-  value: number
-}
 
 
 export default class EthereumBridge {
@@ -57,17 +51,17 @@ export default class EthereumBridge {
   }
 
   public buildUpgradeTransaction(proxyAddress: string, newImplementationAddress: string, proxyAdminAddress: string) : Transaction {
-    if (proxyAdminAddress) {
-      return {
-        to: proxyAdminAddress,
-        value: 0,
-        data: this.encodeProxyAdminTx(proxyAddress, newImplementationAddress)
-      }
-    } else {
+    if (proxyAdminAddress.length === 0) {
       return {
         to: proxyAddress,
         value: 0,
         data: this.encodeProxyTx(newImplementationAddress)
+      }
+    } else {
+      return {
+        to: proxyAdminAddress,
+        value: 0,
+        data: this.encodeProxyAdminTx(proxyAddress, newImplementationAddress)
       }
     }
   }

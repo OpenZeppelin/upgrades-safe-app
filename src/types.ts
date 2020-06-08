@@ -16,3 +16,9 @@ export interface Input {
   isValid: boolean
   meta: object
 }
+
+export interface Transaction {
+  to: string
+  data: string
+  value: number
+}

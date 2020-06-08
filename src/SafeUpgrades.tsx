@@ -7,7 +7,6 @@ import { SafeProvider, Validation } from './types'
 import { isProxyAdmin, isManaged } from './ethereum/Contract'
 import { AddressInput, useAddressInput } from './AddressInput'
 
-
 import { Button, Title, Section } from '@gnosis.pm/safe-react-components'
 import { WidgetWrapper, ButtonContainer } from './components'
 import { ThemeProvider } from 'styled-components'
@@ -18,37 +17,40 @@ interface Props {
   safe: SafeProvider
 }
 
-const ethereumBridge = new EthereumBridge()
-
 const SafeUpgrades: React.FC<Props> = ({ safe }) => {
   const [proxyAdminAddress, setProxyAdminAddress] = useState<string>('')
   const [currentImplementationAddress, setCurrentImplementationAddress] = useState<string>('')
+  const ethereumBridge = new EthereumBridge()
 
 
   const proxyInput = useAddressInput(async (address: Address) : Promise<Validation> => {
-    const Eip1967 = await ethereumBridge.detect(address)
-    const safeAddress = safe.info?.safeAddress
+    setProxyAdminAddress('')
+    setCurrentImplementationAddress('')
 
+    const Eip1967 = await ethereumBridge.detect(address)
     if (Eip1967 === null) {
       return err('This proxy is not EIP 1967 compatible')
     }
 
+    const safeAddress = safe.info?.safeAddress
     const { proxy, implementation } = Eip1967
     const { admin } = proxy
 
-    if (! isProxyAdmin(admin)) {
-      if (admin.address.toString() !== safeAddress) {
-        return err('This proxy is not managed by this Safe')
+    if (isProxyAdmin(admin)) {
+
+      if (isManaged(admin)) {
+        if (admin.admin.address.toString() === safeAddress) {
+          return err("This proxy's admin is not managed by this Safe")
+        }
+
+        setProxyAdminAddress(admin.admin.address.toString())
+
+      } else {
+        return err("This proxy's admin is not managed by any address")
       }
 
-      setProxyAdminAddress('')
-
-    } else if (isManaged(admin)) {
-      if (admin.admin.address.toString() !== safeAddress) {
-        return err("This proxy's admin is not managed by this Safe")
-      }
-
-      setProxyAdminAddress(admin.admin.address.toString())
+    } else if (admin.address.toString() !== safeAddress) {
+      return err('This proxy is not managed by this Safe')
     }
 
     setCurrentImplementationAddress(implementation.address.toString())

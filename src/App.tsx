@@ -19,7 +19,7 @@ const App: React.FC = () => {
 
   return (
     <div>
-      {( safe.info
+      {( safe.info || process.env.NODE_ENV === 'development'
         ? <SafeUpgrades safe={ safe } />
         : <>
           Loading...<br />

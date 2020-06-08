@@ -56,7 +56,7 @@ export class Eip1967 {
     address: Address,
     proxyAdminAddress: Address,
     implementationAddress: Address,
-  ): Promise<(ProxyAdmin & ManagedContract) | null> {
+  ): Promise<ProxyAdmin | (ProxyAdmin & ManagedContract) | null> {
     try {
       const maybeProxyAdmin = bridge.getContract(proxyAdminAddress, duckTypedProxyAdmin)
       const readImplementation = await maybeProxyAdmin.getProxyImplementation(address.toString())
@@ -68,13 +68,17 @@ export class Eip1967 {
       const owner = await maybeProxyAdmin.owner()
       const ownerAddress = Address.fromUint256(owner)
 
-      return {
-        type: 'ProxyAdmin',
-        address: proxyAdminAddress,
-        admin: {
-          address: ownerAddress,
-          type: 'Unknown'
-        }
+      if (ownerAddress.isZeroAddress()) {
+        return {
+          type: 'ProxyAdmin',
+          address: proxyAdminAddress,
+        };
+      } else {
+        return {
+          type: 'ProxyAdmin',
+          address: proxyAdminAddress,
+          admin: { type: 'Unknown', address: ownerAddress },
+        };
       }
     } catch {
       return null
