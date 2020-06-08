@@ -1,8 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 
-import { SafeProvider } from './types'
+import { SafeProvider, Validation } from './types'
 import { hasBytecode, isEmpty } from './utils'
-import { getCode, buildTransaction } from './EthereumBridge'
+import EthereumBridge from './EthereumBridge'
+import { ok, err } from './Result'
+import Address from './Address'
 
 
 import { AddressInput, useAddressInput } from './AddressInput'
@@ -16,59 +18,52 @@ interface Props {
   safe: SafeProvider
 }
 
+const ethereumBridge = new EthereumBridge()
 
 const SafeUpgrades: React.FC<Props> = ({ safe }) => {
+  const [proxyAdmin, setProxyAdmin] = useState<string>('')
+  const [currentImplementation, setCurrentImplementation] = useState<string>('')
 
-  const proxyInput = useAddressInput(async (address: string) => {
-    const code = await getCode(address)
-    console.log(address, code)
+  const proxyInput = useAddressInput(async (address: Address) : Promise<Validation> => {
+    const proxy = await ethereumBridge.detect(address)
+
+    if (proxy === null) return err('Contract is not an EIP 1967 compatible proxy')
+
+    return ok(true)
   })
 
-  const proxyAdminInput = useAddressInput(async (address: string) => {
-    const code = await getCode(address)
-    console.log(address, code)
+  const newImplementationInput = useAddressInput(async (address: Address) : Promise<Validation> => {
+    const hasBytecode = await ethereumBridge.hasBytecode(address)
+    if (! hasBytecode) return err('New implementation has no bytecode')
+
+    return ok(true)
   })
 
-  const newImplementationInput = useAddressInput(async (address: string) => {
-    const code = await getCode(address)
-    console.log(address, code)
-    if (! hasBytecode(code)) throw new Error('New implementation has no bytecode')
-  })
-
-  const isNotEmpty = !isEmpty(proxyInput.address) && !isEmpty(newImplementationInput.address)
-  const inputsAreValid = proxyInput.isValid && newImplementationInput.isValid && proxyAdminInput.isValid
-  const isFormValid = isNotEmpty && inputsAreValid
+  const isFormValid = proxyInput.isValid && newImplementationInput.isValid
 
   const sendTransaction = () : void => {
-    const tx = buildTransaction(proxyInput.address, newImplementationInput.address, proxyAdminInput.address)
+    const tx = ethereumBridge.buildUpgradeTransaction(proxyInput.address, newImplementationInput.address)
     safe.sdk.sendTransactions([tx])
   }
 
   return (
     <ThemeProvider theme={theme}>
       <WidgetWrapper>
+
         <Title size='xs'>Upgrade proxy implementation</Title>
 
         <Section>
-
           <AddressInput
-            id='proxy-address'
+            name='proxy'
             label='Proxy address'
             input={ proxyInput }
           />
 
           <AddressInput
-            id='new-implementation-address'
+            name='new-implementation'
             label='New implementation address'
             input={ newImplementationInput }
           />
-
-          <AddressInput
-            id='proxy-admin-address'
-            label='Proxy admin address (optional)'
-            input={ proxyAdminInput }
-          />
-
         </Section>
 
         <ButtonContainer>
@@ -81,6 +76,7 @@ const SafeUpgrades: React.FC<Props> = ({ safe }) => {
           >
             Propose upgrade
           </Button>
+
         </ButtonContainer>
       </WidgetWrapper>
     </ThemeProvider>
