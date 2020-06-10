@@ -19,6 +19,7 @@ export default class EthereumBridge {
     if (this._providerInstance === undefined) {
       const w: any = window
 
+      // Out of curiosity: is this the provider injected by metamask, or does safe inject one?
       if (w.ethereum) {
         this._providerInstance = new ethers.providers.Web3Provider(w.ethereum)
       } else {
@@ -51,6 +52,7 @@ export default class EthereumBridge {
   }
 
   public buildUpgradeTransaction(proxyAddress: string, newImplementationAddress: string, proxyAdminAddress: string) : Transaction {
+    // Same here: prefer null or undefined over empty string
     if (proxyAdminAddress.length === 0) {
       return {
         to: proxyAddress,
@@ -64,6 +66,9 @@ export default class EthereumBridge {
         data: this.encodeProxyAdminTx(proxyAddress, newImplementationAddress)
       }
     }
+
+    // Question: how does the safe sdk decide upon gas and gasprice when sending a tx?
+    // Do we need to set it ourselves, or safe takes care of it?
   }
 
   private encodeProxyAdminTx(proxyAddress: string, newImplementationAddress: string) : string {
