@@ -34,6 +34,7 @@ const SafeUpgrades: React.FC<SafeUpgradesProps> = ({ safe, ethereum }) => {
     if (isProxyAdmin(admin)) {
 
       if (isManaged(admin)) {
+        // Do not compare addresses by equality, as checksums can screw over the comparison; use a helper for this instead
         if (admin.admin.address.toString() === safeAddress) {
           return err("This proxy's admin is not managed by this Safe")
         }
