@@ -76,6 +76,7 @@ const SafeUpgrades: React.FC<SafeUpgradesProps> = ({ safe, ethereum }) => {
   const sendTransaction = () : void => {
     const tx = ethereum.buildUpgradeTransaction(proxyInput.address, newImplementationInput.address, proxyAdminAddress)
     safe.sdk.sendTransactions([tx])
+    // Does the user get any prompt from the safe app here? Or should we let the user know that the proposal was successful somehow, and clear the inputs?
   }
 
   return (
