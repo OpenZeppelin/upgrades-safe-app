@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { TextField } from '@gnosis.pm/safe-react-components'
-import { Validator, Input } from './types'
+import { AddressValidator, Input } from './types'
 import Address from './ethereum/Address'
-import { Err } from './Result'
 
 interface Props {
   name: string
@@ -10,9 +9,11 @@ interface Props {
   input: Input
 }
 
+interface MetaData {
+  error?: string
+}
 
 export const AddressInput: React.FC<Props> = ({ name, label, input }) => {
-  // As a nice-to-have, maybe we can add a small link to etherscan next to the text field, if the address is valid
   return <div>
     <TextField
       id={ `${name}-address` }
@@ -26,10 +27,10 @@ export const AddressInput: React.FC<Props> = ({ name, label, input }) => {
 }
 
 
-export const useAddressInput = (validate: Validator) : Input => {
+export const useAddressInput = (validate: AddressValidator) : Input => {
   const [address, setAddress] = useState<string>('')
   const [isValid, setValid] = useState<boolean>(true)
-  const [meta, setMeta] = useState<object>({}) // I'd type meta for clarity, or just use a string here, and change to [err, setErr]
+  const [meta, setMeta] = useState<MetaData>({})
 
   useEffect(() => {
     (async () => {
@@ -37,8 +38,7 @@ export const useAddressInput = (validate: Validator) : Input => {
 
       const addressResult = Address.parse(address)
 
-      // Prefer addressResult.isErr(), instanceof can sometimes be problematic (though not in this case)
-      if (addressResult instanceof Err) {
+      if (addressResult.isErr()) {
         setValid(false)
         setMeta({ error: addressResult.error })
         return
@@ -46,7 +46,7 @@ export const useAddressInput = (validate: Validator) : Input => {
 
       const validationResult = await validate(addressResult.value)
 
-      if (validationResult instanceof Err) {
+      if (validationResult.isErr()) {
         setValid(false)
         setMeta({ error: validationResult.error })
         return
