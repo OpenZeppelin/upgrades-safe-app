@@ -11,9 +11,12 @@ interface Props {
 }
 
 export const AddressInput: React.FC<Props> = ({ name, label, input }) => {
+<<<<<<< HEAD
   // todo: As a nice-to-have, maybe we can add a small link to etherscan next to the text field, if the address is valid
   const status = input.loading ? 'loading' : ( input.isValid ? 'success' : 'error' )
 
+=======
+>>>>>>> Addressed review comments
   return <div>
     <h5>{ label }</h5>
     {
