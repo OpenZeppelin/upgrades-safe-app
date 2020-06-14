@@ -49,7 +49,15 @@ it('renders submit button disabled by default', () => {
 })
 
 
-it('renders submit button enabled only if proxy and implementation inputs are valid', () => {
+it('renders submit button disabled if proxy or implementation are empty', () => {
+})
+
+
+it('renders submit button disabled if proxy or implementation are invalid', () => {
+})
+
+
+it('renders submit button enabled if proxy and implementation are valid', () => {
 })
 
 
