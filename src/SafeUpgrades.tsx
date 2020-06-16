@@ -13,27 +13,27 @@ import theme from './customTheme'
 
 
 const SafeUpgrades: React.FC<SafeUpgradesProps> = ({ safe, ethereum }) => {
-  const [proxyAdminAddress, setProxyAdminAddress] = useState<string>('')
-  const [currentImplementationAddress, setCurrentImplementationAddress] = useState<string>('')
+  const [proxyAdminAddress, setProxyAdminAddress] = useState<string | undefined>()
+  const [currentImplementationAddress, setCurrentImplementationAddress] = useState<string | undefined>()
 
 
   const proxyInput = useAddressInput(async (address: Address) : Promise<Validation> => {
-    setProxyAdminAddress('')
-    setCurrentImplementationAddress('')
+    setProxyAdminAddress(undefined)
+    setCurrentImplementationAddress(undefined)
 
     const Eip1967 = await ethereum.detect(address)
     if (Eip1967 === null) {
       return err('This proxy is not EIP 1967 compatible')
     }
 
-    const safeAddress = safe.info?.safeAddress
+    const safeAddress = safe.info?.safeAddress || ''
     const { proxy, implementation } = Eip1967
     const { admin } = proxy
 
     if (isProxyAdmin(admin)) {
 
       if (isManaged(admin)) {
-        if (admin.admin.address.toString() === safeAddress) {
+        if ( ! admin.admin.address.isEquivalent(safeAddress)) {
           return err("This proxy's admin is not managed by this Safe")
         }
 
@@ -43,17 +43,17 @@ const SafeUpgrades: React.FC<SafeUpgradesProps> = ({ safe, ethereum }) => {
         return err("This proxy's admin is not managed by any address")
       }
 
-    } else if (admin.address.toString() !== safeAddress) {
+    } else if ( ! admin.address.isEquivalent(safeAddress)) {
       return err('This proxy is not managed by this Safe')
     }
 
     setCurrentImplementationAddress(implementation.address.toString())
-    return ok(true)
+    return ok(undefined)
   })
 
 
   const newImplementationInput = useAddressInput(async (address: Address) : Promise<Validation> => {
-    if (currentImplementationAddress === address.toString()) {
+    if (currentImplementationAddress && address.isEquivalent(currentImplementationAddress)) {
       return err('Proxy already points to this implementation')
     }
 
@@ -68,7 +68,7 @@ const SafeUpgrades: React.FC<SafeUpgradesProps> = ({ safe, ethereum }) => {
       return err("New implementation can't be a proxy contract")
     }
 
-    return ok(true)
+    return ok(undefined)
   })
 
 
@@ -76,6 +76,7 @@ const SafeUpgrades: React.FC<SafeUpgradesProps> = ({ safe, ethereum }) => {
     const tx = ethereum.buildUpgradeTransaction(proxyInput.address, newImplementationInput.address, proxyAdminAddress)
     safe.sdk.sendTransactions([tx])
   }
+
 
   return (
     <ThemeProvider theme={theme}>
@@ -103,7 +104,7 @@ const SafeUpgrades: React.FC<SafeUpgradesProps> = ({ safe, ethereum }) => {
             color='primary'
             variant='contained'
             onClick={ sendTransaction }
-            disabled={! (proxyInput.isValid && newImplementationInput.isValid) }
+            disabled={ ! (proxyInput.isValid && newImplementationInput.isValid) }
           >
             Propose upgrade
           </Button>

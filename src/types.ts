@@ -4,8 +4,9 @@ import EthereumBridge from './ethereum/EthereumBridge'
 import Address from './ethereum/Address'
 
 
-export type Validation = Result<boolean, string>
-export type Validator = (address: Address) => Promise<Validation>
+export type Validation = Result<void, string>
+
+export type AddressValidator = (address: Address) => Promise<Validation>
 
 export interface SafeProvider {
   sdk: SdkInstance,

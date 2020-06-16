@@ -50,8 +50,8 @@ export default class EthereumBridge {
     return await Eip1967.detect(this, address)
   }
 
-  public buildUpgradeTransaction(proxyAddress: string, newImplementationAddress: string, proxyAdminAddress: string) : Transaction {
-    if (proxyAdminAddress.length === 0) {
+  public buildUpgradeTransaction(proxyAddress: string, newImplementationAddress: string, proxyAdminAddress: string | undefined) : Transaction {
+    if (proxyAdminAddress === undefined) {
       return {
         to: proxyAddress,
         value: 0,
