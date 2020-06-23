@@ -45,6 +45,7 @@ export const AddressInput: React.FC<Props> = ({ name, label, input }) => {
 
       : <input
           id={ `${name}-address` }
+          name={ name }
           className={styles.input}
           type="text"
           value={ input.address }
