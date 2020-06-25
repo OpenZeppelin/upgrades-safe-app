@@ -16,7 +16,7 @@ In order to interact with a real Safe SDK, you will need to deploy the app to IP
 
 ### 1. Run the IPFS daemon
 
-To deploy the app you first need to [install the ipfs client](https://gist.github.com/MiguelBel/b3b5f711aa8d9362afa5f16e4e972461) and then run the daemon. 
+To deploy the app you first need to [install the ipfs client](https://docs.ipfs.io/install/) and then run the daemon.
 
 ```bash
 $ ipfs daemon
