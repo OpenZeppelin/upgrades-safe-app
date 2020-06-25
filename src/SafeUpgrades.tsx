@@ -37,7 +37,7 @@ const SafeUpgrades: React.FC<SafeUpgradesProps> = ({ safe, ethereum }) => {
           return err("This proxy's admin is not managed by this Safe")
         }
 
-        setProxyAdminAddress(admin.admin.address.toString())
+        setProxyAdminAddress(admin.address.toString())
 
       } else {
         return err("This proxy's admin is not managed by any address")
