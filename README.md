@@ -1,1 +1,1 @@
-# OpenZeppelin | Defender Safe App
+# OpenZeppelin | Safe Upgrades App
