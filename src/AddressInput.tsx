@@ -10,66 +10,67 @@ interface Props {
   input: Input
 }
 
-interface MetaData {
-  error?: string
-}
-
 export const AddressInput: React.FC<Props> = ({ name, label, input }) => {
-  if (input.address===""){
-    return <div>
-      <TextField
-        id={ `${name}-address` }
-        label={ label }
-        value={ input.address }
-        meta={ input.meta }
-        style={{ marginTop: 10 }}
-        onChange={e => input.setAddress(e.target.value)}
-      />
-    </div>
-  }
-  else {
-    return <div>
-      <h5>New implementation address</h5>
-      <div className={styles.input}>
-        <div className={styles.address}>
-          <img className={styles.blockie} src='/blockie.png' />
-          <p>0xLc0AC4de5BBE235135E67ba58bDe41d4d863f6B8</p>
+  return <div>
+    <h5>{ label }</h5>
+    {
+      input.isAddress
+
+      ? <div>
+        <div className={styles.input}>
+          <div className={styles.address}>
+            <img
+              className={styles.blockie}
+              onClick={ () => input.setAddress('') }
+              src='/blockie.png'
+            />
+            <p>{ input.address }</p>
+          </div>
         </div>
       </div>
-    </div>
-  }
+
+      : <input
+          id={ `${name}-address` }
+          className={styles.input}
+          type="text"
+          value={ input.address }
+          onChange={ e => input.setAddress(e.target.value) }
+        />
+    }
+  </div>
 }
 
 
 export const useAddressInput = (validate: AddressValidator) : Input => {
   const [address, setAddress] = useState<string>('')
+  const [isAddress, setIsAddress] = useState<boolean>(false)
   const [isValid, setValid] = useState<boolean>(true)
-  const [meta, setMeta] = useState<MetaData>({})
+  const [error, setError] = useState<string>('')
 
   useEffect(() => {
     (async () => {
-      if (! address) return
-
+      setIsAddress(false)
       const addressResult = Address.parse(address)
 
       if (addressResult.isErr()) {
         setValid(false)
-        setMeta({ error: addressResult.error })
+        setError(addressResult.error)
         return
       }
 
+      setIsAddress(true)
       const validationResult = await validate(addressResult.value)
 
       if (validationResult.isErr()) {
         setValid(false)
-        setMeta({ error: validationResult.error })
+        setError(validationResult.error)
         return
       }
 
       setValid(true)
-      setMeta({})
+      setError('')
     })()
   }, [address])
 
-  return { address, setAddress, isValid, meta }
+  return { address, setAddress, isValid, isAddress, error }
 }
