@@ -16,18 +16,18 @@ body {
 
 .header {
 	display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: space-between;
-  align-items: center;
-  align-content: space-between;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	justify-content: space-between;
+	align-items: center;
+	align-content: space-between;
 }
 
 h5 {
 	font-family: Helvetica Neue;
 	font-weight: bold;
 	font-size: 20px;
-  margin: 0;
+	margin: 0;
 }
 
 .input {
