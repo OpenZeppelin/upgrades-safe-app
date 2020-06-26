@@ -15,16 +15,29 @@ interface MetaData {
 }
 
 export const AddressInput: React.FC<Props> = ({ name, label, input }) => {
-  return <div>
-    <TextField
-      id={ `${name}-address` }
-      label={ label }
-      value={ input.address }
-      meta={ input.meta }
-      style={{ marginTop: 10 }}
-      onChange={e => input.setAddress(e.target.value)}
-    />
-  </div>
+  if (input.address===""){
+    return <div>
+      <TextField
+        id={ `${name}-address` }
+        label={ label }
+        value={ input.address }
+        meta={ input.meta }
+        style={{ marginTop: 10 }}
+        onChange={e => input.setAddress(e.target.value)}
+      />
+    </div>
+  }
+  else {
+    return <div>
+      <h5>New implementation address</h5>
+      <div className={styles.input}>
+        <div className={styles.address}>
+          <img className={styles.blockie} src='/blockie.png' />
+          <p>0xLc0AC4de5BBE235135E67ba58bDe41d4d863f6B8</p>
+        </div>
+      </div>
+    </div>
+  }
 }
 
 
