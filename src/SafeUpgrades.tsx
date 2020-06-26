@@ -11,6 +11,7 @@ import { WidgetWrapper, ButtonContainer } from './components'
 import { ThemeProvider } from 'styled-components'
 import theme from './customTheme'
 
+import styles from './css/style.module.css'; 
 
 const SafeUpgrades: React.FC<SafeUpgradesProps> = ({ safe, ethereum }) => {
   const [proxyAdminAddress, setProxyAdminAddress] = useState<string | undefined>()
