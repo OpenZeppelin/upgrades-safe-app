@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { TextField } from '@gnosis.pm/safe-react-components'
 import { AddressValidator, Input } from './types'
 import Address from './ethereum/Address'
-import styles from './css/style.module.css'; 
+import styles from './css/style.module.css';
 
 interface Props {
   name: string
