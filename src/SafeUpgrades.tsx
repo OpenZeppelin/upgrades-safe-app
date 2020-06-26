@@ -84,7 +84,7 @@ const SafeUpgrades: React.FC<SafeUpgradesProps> = ({ safe, ethereum }) => {
       <WidgetWrapper>
         <div className={styles.card}>
           <div className={styles.header}>
-            <h5>Upgrade proxy implementation</h5>
+            <h4>Upgrade proxy implementation</h4>
             <Button
                 size='md'
                 color='primary'
