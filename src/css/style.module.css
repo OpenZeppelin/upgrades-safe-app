@@ -12,7 +12,6 @@ body {
 	min-width: 620px;
 	min-height: 400px;
 	box-shadow: 0px 4px 10px rgba(44, 55, 75, 0.1);
-	
 }
 
 .header {
@@ -22,7 +21,6 @@ body {
   justify-content: space-between;
   align-items: center;
   align-content: space-between;
-
 }
 
 h5 {
