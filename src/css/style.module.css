@@ -45,3 +45,37 @@ p {
 	text-align: center;
 	font-size: 12px;
 }
+
+/* Address component */
+
+h5 {
+  font-weight: bold;
+  font-size: 14px;
+  color: #575C66;
+  margin-bottom: 4px;
+  margin-top: 16px;
+}
+
+.address {
+  height: 24px;
+  width: fit-content;
+  padding: 0;
+  border: none;
+  border-radius: 4px;
+  background: #F5F6FF;
+  display: flex;
+  align-items: flex-start;
+}
+
+.blockie {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px 0 0 4px;
+  opacity: .8;
+}
+
+.address p {
+  font-family: Roboto Mono;
+  font-size: 14px;
+  margin: 0 8px;
+}
