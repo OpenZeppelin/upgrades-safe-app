@@ -82,35 +82,34 @@ const SafeUpgrades: React.FC<SafeUpgradesProps> = ({ safe, ethereum }) => {
   return (
     <ThemeProvider theme={theme}>
       <WidgetWrapper>
+        <div className={styles.card}>
+          <div className={styles.header}>
+            <h5>Upgrade proxy implementation</h5>
+            <Button
+                size='md'
+                color='primary'
+                variant='contained'
+                onClick={ sendTransaction }
+                disabled={ ! (proxyInput.isValid && newImplementationInput.isValid) }
+              >
+                Propose
+            </Button>
+           </div>
+          <Section>
+            <AddressInput
+              name='proxy'
+              label='Proxy address'
+              input={ proxyInput }
+            />
 
-        <Title size='xs'>Upgrade proxy implementation</Title>
-
-        <Section>
-          <AddressInput
-            name='proxy'
-            label='Proxy address'
-            input={ proxyInput }
-          />
-
-          <AddressInput
-            name='new-implementation'
-            label='New implementation address'
-            input={ newImplementationInput }
-          />
-        </Section>
-
-        <ButtonContainer>
-          <Button
-            size='lg'
-            color='primary'
-            variant='contained'
-            onClick={ sendTransaction }
-            disabled={ ! (proxyInput.isValid && newImplementationInput.isValid) }
-          >
-            Propose upgrade
-          </Button>
-
-        </ButtonContainer>
+            <AddressInput
+              name='new-implementation'
+              label='New implementation address'
+              input={ newImplementationInput }
+            />
+          </Section>
+        </div>
+        <p>Powered by OpenZeppelin | Defender</p>
       </WidgetWrapper>
     </ThemeProvider>
   )
