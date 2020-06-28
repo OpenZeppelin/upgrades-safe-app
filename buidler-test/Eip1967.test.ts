@@ -3,23 +3,28 @@ import { ethers } from "@nomiclabs/buidler"
 import { Contract } from "ethers"
 
 import { isProxyAdmin } from "../src/ethereum/Contract"
-
 import EthereumBridge from "../src/ethereum/EthereumBridge"
-import Address from "../src/ethereum/Address"
 import { Eip1967 } from "../src/ethereum/Eip1967"
+import Address from "../src/ethereum/Address"
+import { addressBook } from "../src/Mocks"
 
-describe("Eip1967", () => {
+const AdminUpgradeabilityProxyABI = require('../src/ethereum/abis/AdminUpgradeabilityProxy.json')
+const ProxyAdminABI = require('../src/ethereum/abis/ProxyAdmin.json')
+
+
+describe("EthereumBridge", () => {
+  EthereumBridge.provider = ethers.provider
   let greeter: Contract
-  const detector = (address: Address) => Eip1967.detect(new EthereumBridge(), address)
+  let ethereumBridge: EthereumBridge
 
   beforeEach(async () => {
-    EthereumBridge.provider = ethers.provider
+    ethereumBridge = new EthereumBridge()
     const Greeter = await ethers.getContractFactory("Greeter")
     greeter = await Greeter.deploy()
   })
 
   it("detects contract is not upgradeable", async () => {
-    const features = await detector(
+    const features = await ethereumBridge.detect(
       Address.unsafeCreate(greeter.address)
     )
     
@@ -33,7 +38,7 @@ describe("Eip1967", () => {
     const AdminUpgradeabilityProxy = await ethers.getContractFactory("AdminUpgradeabilityProxy")
     const adminProxy = await AdminUpgradeabilityProxy.deploy(greeter.address, proxyAdmin.address, [])
     
-    const features = await detector(
+    const features = await ethereumBridge.detect(
       Address.unsafeCreate(adminProxy.address)
     )
 
@@ -57,11 +62,35 @@ describe("Eip1967", () => {
     const AdminUpgradeabilityProxy = await ethers.getContractFactory("AdminUpgradeabilityProxy")
     const adminProxy = await AdminUpgradeabilityProxy.deploy(greeter.address, fakeProxyAdmin.address, [])
     
-    const features = await detector(
+    const features = await ethereumBridge.detect(
       Address.unsafeCreate(adminProxy.address)
     )
 
     const { proxy } = features as Eip1967
     expect(isProxyAdmin(proxy.admin)).to.be.false
+  })
+
+  it("builds upgrade transaction for non-ProxyAdmin owned Proxy", () => {
+    const proxyInterface = new ethers.utils.Interface(AdminUpgradeabilityProxyABI)
+    const { proxy, newImplementation } = addressBook
+
+    const tx = ethereumBridge.buildUpgradeTransaction(proxy, newImplementation, undefined)
+    const txData = proxyInterface.parseTransaction(tx)
+
+    expect(tx.to).to.be.equal(proxy)
+    expect(txData.args).to.eql([ newImplementation ])
+    expect(txData.signature).to.be.equal('upgradeTo(address)')
+  })
+
+  it("builds upgrade transaction for ProxyAdmin owned Proxy", () => {
+    const proxyAdminInterface = new ethers.utils.Interface(ProxyAdminABI)
+    const { proxy, proxyAdmin, newImplementation } = addressBook
+
+    const tx = ethereumBridge.buildUpgradeTransaction(proxy, newImplementation, proxyAdmin)
+    const txData = proxyAdminInterface.parseTransaction(tx)
+
+    expect(tx.to).to.be.equal(proxyAdmin)
+    expect(txData.args).to.eql([ proxy, newImplementation ])
+    expect(txData.signature).to.be.equal('upgrade(address,address)')
   })
 })

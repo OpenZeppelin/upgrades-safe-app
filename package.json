@@ -41,7 +41,9 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "buidler test && react-scripts test",
+    "test:all": "buidler test && react-scripts test",
+    "test:buidler": "buidler test",
+    "test:ui": "react-scripts test",
     "eject": "react-scripts eject",
     "compile": "buidler compile",
     "deploy": "yarn build && ipfs add -r build"
