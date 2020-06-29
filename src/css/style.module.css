@@ -1,7 +1,20 @@
 body {
 	background: #F9FAFB;
+  font-family: Helvetica Neue;
 	color: #2C374B;
 	line-height: 24px;
+  font-size: 14px;
+}
+
+p {
+  margin: 0;
+}
+
+h5 {
+  font-family: Helvetica Neue;
+  font-weight: bold;
+  font-size: 20px;
+  margin: 0;
 }
 
 .card {
@@ -10,7 +23,7 @@ body {
 	padding: 36px 48px;
 	margin: auto;
 	min-width: 620px;
-	min-height: 400px;
+	height: fit-content;
 	box-shadow: 0px 4px 10px rgba(44, 55, 75, 0.1);
 }
 
@@ -23,13 +36,6 @@ body {
 	align-content: space-between;
 }
 
-h5 {
-	font-family: Helvetica Neue;
-	font-weight: bold;
-	font-size: 20px;
-	margin: 0;
-}
-
 .input {
 	background: white !important;
 	border: 1px solid red !important;
@@ -40,8 +46,42 @@ h5 {
 	border: 1px solid red !important;
 }
 
-p {
-	font-family: Helvetica Neue;
-	text-align: center;
-	font-size: 12px;
+
+/* Upgrade details*/
+
+.details {
+  box-sizing: border-box;
+  border: 1px solid #D8DBE2;
+  border-radius: 6px;
+  margin-top: 32px;
 }
+
+.details .title {
+  padding: 16px;
+  border-bottom: 1px solid #D8DBE2;
+}
+
+.details .title p {
+  font-weight: bold;
+  font-size: 10px;
+  line-height: 10px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #818998; 
+}
+
+.nobullet {
+  list-style-type: none;
+  padding: 16px;
+  margin: 0;
+}
+
+li { 
+  margin-left: 20px;
+  margin-bottom: 8px;
+  padding-left: 4px;
+}
+
+li.note { list-style-image: url('/ic_info.svg'); }
+li.error { list-style-image: url('/ic_error.svg'); }
+li.success { list-style-image: url('/ic_success.svg'); }
