@@ -21,6 +21,7 @@ h4 {
 h5 {
   font-family: Helvetica Neue;
   font-weight: bold;
+  color: #2C374B;
   font-size: 20px;
   margin: 0;
 }
@@ -96,12 +97,12 @@ h5 {
   margin-top: 32px;
 }
 
-.details .title {
+.details .header {
   padding: 16px;
   border-bottom: 1px solid #D8DBE2;
 }
 
-.details .title p {
+.details .header p {
   font-weight: bold;
   font-size: 10px;
   line-height: 10px;
@@ -122,6 +123,18 @@ li {
   padding-left: 4px;
 }
 
+li:last-child { 
+  margin-bottom: 4px;
+}
+
 li.note { list-style-image: url('/ic_info.svg'); }
 li.error { list-style-image: url('/ic_error.svg'); }
 li.success { list-style-image: url('/ic_success.svg'); }
+
+li .title {
+  font-weight: bold;
+}
+
+li .description {
+  line-height: 1.2;
+}
