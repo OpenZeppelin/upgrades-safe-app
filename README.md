@@ -12,7 +12,7 @@ This will open a new tab in your browser pointing to `https://localhost:3000` wh
 
 In order to interact with a real Safe SDK, you will need to deploy the app to IPFS (see below).
 
-### Testing
+## Testing
 To test logic components, run:
 
 ```bash
@@ -23,6 +23,12 @@ To test the UI, run:
 
 ```bash
 yarn test:ui
+```
+
+And to run the whole suite, run:
+
+```bash
+yarn test
 ```
 
 ## Deployment
