@@ -5,6 +5,26 @@ body {
   color: #2C374B;
 }
 
+p {
+  margin: 0;
+  text-align: center;
+  font-size: 12px;
+}
+
+
+h4 {
+  font-weight: bold;
+  font-size: 20px;
+  margin: 0;
+}
+
+h5 {
+  font-family: Helvetica Neue;
+  font-weight: bold;
+  font-size: 20px;
+  margin: 0;
+}
+
 .card {
   background: white;
   border-radius: 4px;
@@ -24,12 +44,6 @@ body {
   align-content: space-between;
 }
 
-h4 {
-  font-weight: bold;
-  font-size: 20px;
-  margin: 0;
-}
-
 .input {
   height: 48px;
   width: 100%;
@@ -37,11 +51,6 @@ h4 {
   border: 1px solid #D8DBE2;
   box-sizing: border-box;
   border-radius: 6px;
-}
-
-p {
-  text-align: center;
-  font-size: 12px;
 }
 
 /* Address component */
@@ -77,3 +86,42 @@ h5 {
   font-size: 14px;
   margin: 0 8px;
 }
+
+/* Upgrade details*/
+
+.details {
+  box-sizing: border-box;
+  border: 1px solid #D8DBE2;
+  border-radius: 6px;
+  margin-top: 32px;
+}
+
+.details .title {
+  padding: 16px;
+  border-bottom: 1px solid #D8DBE2;
+}
+
+.details .title p {
+  font-weight: bold;
+  font-size: 10px;
+  line-height: 10px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #818998; 
+}
+
+.nobullet {
+  list-style-type: none;
+  padding: 16px;
+  margin: 0;
+}
+
+li { 
+  margin-left: 20px;
+  margin-bottom: 8px;
+  padding-left: 4px;
+}
+
+li.note { list-style-image: url('/ic_info.svg'); }
+li.error { list-style-image: url('/ic_error.svg'); }
+li.success { list-style-image: url('/ic_success.svg'); }
