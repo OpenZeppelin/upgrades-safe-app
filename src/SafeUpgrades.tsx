@@ -109,20 +109,20 @@ const SafeUpgrades: React.FC<SafeUpgradesProps> = ({ safe, ethereum }) => {
             />
           </Section>
           <div className={styles.details}>
-            <div className={styles.title}>
+            <div className={styles.header}>
               <p>upgrade information</p>
             </div>
             <ul className={styles.nobullet}>
               <li className={styles.success}>
-                <p>This broxy is EIP 1967 compatible</p>
+                <p className={styles.title}>This broxy is EIP 1967 compatible</p>
               </li>
               <li className={styles.error}>
-                <p>New implementation can’t be a proxy contract</p>
-                <p>New implementation can’t be a proxy contract</p>
+                <p className={styles.title}>New implementation can’t be a proxy contract</p>
+                <p className={styles.description}>The new implementation can’t be a proxy contract</p>
               </li>
               <li className={styles.note}>
-                <p>Some generic tip goes here</p>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                <p className={styles.title}>Some generic tip goes here</p>
+                <p className={styles.description}>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
               </li>
             </ul>
           </div>
