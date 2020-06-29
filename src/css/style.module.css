@@ -27,13 +27,13 @@ h5 {
 }
 
 .card {
-  background: white;
-  border-radius: 4px;
-  padding: 36px 48px;
-  margin: auto;
-  min-width: 620px;
-  min-height: 400px;
-  box-shadow: 0px 4px 10px rgba(44, 55, 75, 0.1);
+	background: white;
+	border-radius: 4px;
+	padding: 36px 48px;
+	margin: auto;
+	min-width: 620px;
+	height: fit-content;
+	box-shadow: 0px 4px 10px rgba(44, 55, 75, 0.1);
 }
 
 .header {
@@ -46,22 +46,13 @@ h5 {
 }
 
 .input {
-  height: 48px;
-  width: 100%;
-  padding: 12px 16px;
-  border: 1px solid #D8DBE2;
-  box-sizing: border-box;
-  border-radius: 6px;
+	background: white !important;
+	border: 1px solid red !important;
 }
 
-/* Address component */
-
-h5 {
-  font-weight: bold;
-  font-size: 14px;
-  color: #575C66;
-  margin-bottom: 4px;
-  margin-top: 16px;
+[id*="-address"] {
+	background: white !important;
+	border: 1px solid red !important;
 }
 
 .address {
