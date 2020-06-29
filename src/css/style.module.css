@@ -1,8 +1,8 @@
 body {
-	background: #F9FAFB;
+  background: #F9FAFB;
   font-family: Helvetica Neue;
   color: #575C66;
-	line-height: 24px;
+  line-height: 24px;
   font-size: 14px;
 }
 
@@ -19,32 +19,32 @@ h5 {
 }
 
 .card {
-	background: white;
-	border-radius: 4px;
-	padding: 36px 48px;
-	margin: auto;
-	min-width: 620px;
-	height: fit-content;
-	box-shadow: 0px 4px 10px rgba(44, 55, 75, 0.1);
+  background: white;
+  border-radius: 4px;
+  padding: 36px 48px;
+  margin: auto;
+  min-width: 620px;
+  height: fit-content;
+  box-shadow: 0px 4px 10px rgba(44, 55, 75, 0.1);
 }
 
 .header {
-	display: flex;
-	flex-direction: row;
-	flex-wrap: nowrap;
-	justify-content: space-between;
-	align-items: center;
-	align-content: space-between;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+  align-content: space-between;
 }
 
 .input {
-	background: white !important;
-	border: 1px solid red !important;
+  background: white !important;
+  border: 1px solid red !important;
 }
 
 [id*="-address"] {
-	background: white !important;
-	border: 1px solid red !important;
+  background: white !important;
+  border: 1px solid red !important;
 }
 
 
