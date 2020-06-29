@@ -12,11 +12,24 @@ This will open a new tab in your browser pointing to `https://localhost:3000` wh
 
 In order to interact with a real Safe SDK, you will need to deploy the app to IPFS (see below).
 
+### Testing
+To test logic components, run:
+
+```bash
+yarn test:buidler
+```
+
+To test the UI, run:
+
+```bash
+yarn test:ui
+```
+
 ## Deployment
 
 ### 1. Run the IPFS daemon
 
-To deploy the app you first need to [install the ipfs client](https://docs.ipfs.io/install/) and then run the daemon.
+To deploy the app you first need to [install the ipfs client](https://docs.ipfs.io/install/) and then run the daemon
 
 ```bash
 $ ipfs daemon
