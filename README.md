@@ -25,7 +25,7 @@ To test the UI, run:
 yarn test:ui
 ```
 
-And to run the whole suite, run:
+And to test the whole suite, run:
 
 ```bash
 yarn test
