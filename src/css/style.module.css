@@ -45,3 +45,28 @@ p {
 	text-align: center;
 	font-size: 12px;
 }
+
+/* Button styles */
+
+button {
+  min-width: 5rem;
+  padding: 8px 24px;
+  background: #2C374B;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 1.2rem;
+  letter-spacing: 0.01em;
+}
+
+button:hover {
+  background: #4E5DE4;
+  transition: 0.1s;
+}
+
+button:active {
+  background: #3D4A99;
+  transition: 0.1s;
+}
