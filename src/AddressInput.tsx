@@ -26,6 +26,7 @@ export const AddressInput: React.FC<Props> = ({ name, label, input }) => {
             />
             <p>{ input.address }</p>
           </div>
+          <div className={styles.success}></div>
         </div>
       </div>
 

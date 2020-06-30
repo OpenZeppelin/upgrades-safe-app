@@ -51,9 +51,19 @@ h5 {
   border: 1px solid #D8DBE2;
   box-sizing: border-box;
   border-radius: 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 /* address component */
+
+.blockie {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px 0 0 4px;
+  opacity: .8;
+}
 
 .address {
   height: 24px;
@@ -66,6 +76,14 @@ h5 {
   align-items: flex-start;
 }
 
+.address p {
+  font-family: Roboto Mono;
+  font-size: 14px;
+  margin: 0 8px;
+}
+
+/* delete address */
+
 .address::after {
   content: url(/ic_delete.svg);
   opacity: .6;
@@ -77,17 +95,17 @@ h5 {
   opacity: 1;
 }
 
-.blockie {
-  width: 24px;
-  height: 24px;
-  border-radius: 4px 0 0 4px;
-  opacity: .8;
-}
+/* input status */
 
-.address p {
-  font-family: Roboto Mono;
-  font-size: 14px;
-  margin: 0 8px;
+.input .error {
+  height: 16px;
+  width: 16px;
+  content: url(/ic_error.svg);
+}
+.input .success {
+  height: 16px;
+  width: 16px;
+  content: url(/ic_success.svg);
 }
 
 /* Upgrade details*/
