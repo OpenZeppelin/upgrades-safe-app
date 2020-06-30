@@ -66,6 +66,17 @@ h5 {
   align-items: flex-start;
 }
 
+.address::after {
+  content: url(/ic_delete.svg);
+  opacity: .6;
+  cursor: pointer;
+  margin-right: 8px;
+}
+
+.address:hover::after {
+  opacity: 1;
+}
+
 .blockie {
   width: 24px;
   height: 24px;
