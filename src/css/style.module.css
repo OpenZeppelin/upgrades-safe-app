@@ -154,3 +154,24 @@ button:active {
   background: #3D4A99;
   transition: 0.1s;
 }
+
+/* oz defender footer */
+
+footer {
+  font-size: 12px;
+  margin-top: 10px;
+  text-align: center;
+}
+
+footer a {
+  vertical-align: baseline;
+  text-decoration: none;
+  color: #575C66;
+}
+
+footer a:hover { text-decoration: underline; }
+
+footer img {
+  vertical-align: text-bottom;
+  margin: 2px;
+}

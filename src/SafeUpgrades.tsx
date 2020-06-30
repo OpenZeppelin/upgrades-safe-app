@@ -128,7 +128,7 @@ const SafeUpgrades: React.FC<SafeUpgradesProps> = ({ safe, ethereum }) => {
             </ul>
           </div>
         </div>
-        <p>Powered by OpenZeppelin | Defender</p>
+        <footer><a href="https://defender.openzeppelin.com/" target="_blank">Powered by <img src="/oz_icon.svg"/><b>OpenZeppelin</b> | Defender</a></footer>
       </WidgetWrapper>
     </ThemeProvider>
   )
