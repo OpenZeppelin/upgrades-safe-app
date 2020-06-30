@@ -1,6 +1,6 @@
 body {
   background: #F9FAFB;
-  font-family: Helvetica Neue;
+  font-family: "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
   line-height: 24px;
   color: #575C66;
 }
@@ -74,7 +74,7 @@ h5 {
 }
 
 .address p {
-  font-family: Roboto Mono;
+  font-family: Roboto Mono, Monaco, monospace;
   font-size: 14px;
   margin: 0 8px;
 }
