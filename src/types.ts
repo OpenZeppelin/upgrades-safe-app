@@ -22,7 +22,8 @@ export interface Input {
   address: string,
   setAddress(address: string) : void
   isValid: boolean
-  meta: object
+  isAddress: boolean
+  error: string
 }
 
 export interface Transaction {
