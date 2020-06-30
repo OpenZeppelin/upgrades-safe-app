@@ -46,13 +46,13 @@ h5 {
 }
 
 .input {
-	background: white !important;
-	border: 1px solid red !important;
+  background: white !important;
+  border: 1px solid red !important;
 }
 
 [id*="-address"] {
-	background: white !important;
-	border: 1px solid red !important;
+  background: white !important;
+  border: 1px solid red !important;
 }
 
 .address {
