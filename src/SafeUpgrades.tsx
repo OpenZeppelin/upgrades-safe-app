@@ -94,6 +94,7 @@ const SafeUpgrades: React.FC<SafeUpgradesProps> = ({ safe, ethereum }) => {
               >
                 Propose
             </Button>
+            <button>Propose</button>
            </div>
           <Section>
             <AddressInput
