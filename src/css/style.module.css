@@ -2,15 +2,13 @@ body {
   background: #F9FAFB;
   font-family: Helvetica Neue;
   line-height: 24px;
-  color: #2C374B;
+  color: #575C66;
 }
 
 p {
   margin: 0;
-  text-align: center;
-  font-size: 12px;
+  font-size: 14px;
 }
-
 
 h4 {
   font-weight: bold;
