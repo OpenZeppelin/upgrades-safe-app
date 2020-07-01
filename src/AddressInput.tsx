@@ -22,7 +22,7 @@ export const AddressInput: React.FC<Props> = ({ name, label, input }) => {
             <img
               className={styles.blockie}
               onClick={ () => input.setAddress('') }
-              src='/blockie.png'
+              src='blockie.png'
             />
             <p>{ input.address }</p>
           </div>
