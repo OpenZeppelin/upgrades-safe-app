@@ -25,6 +25,9 @@ export const AddressInput: React.FC<Props> = ({ name, label, input }) => {
               src='/blockie.png'
             />
             <p>{ input.address }</p>
+            <button className={styles.delete}>
+              <img src='/ic_delete.svg'/>
+            </button>
           </div>
           <div className={styles.success}></div>
         </div>

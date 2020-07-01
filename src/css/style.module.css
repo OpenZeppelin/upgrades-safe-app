@@ -84,16 +84,19 @@ h5 {
 
 /* delete address */
 
-.address::after {
-  content: url(/ic_delete.svg);
-  opacity: .6;
+.delete {
+  background: white;
   cursor: pointer;
-  margin-right: 8px;
+  height: 24px;
+  padding: 3px 8px;
+  min-width: 0;
+}
+.delete:hover {
+  background: #F5F6FF;
 }
 
-.address:hover::after {
-  opacity: 1;
-}
+.delete img { opacity: .6; }
+.delete:hover img { opacity: .8; }
 
 /* input status */
 
