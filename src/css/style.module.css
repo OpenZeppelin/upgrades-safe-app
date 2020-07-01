@@ -90,13 +90,13 @@ h5 {
   height: 24px;
   padding: 3px 8px;
   min-width: 0;
+  opacity: .8;
 }
-.delete:hover {
+.delete:hover,
+.delete:focus {
+  opacity: 1;
   background: #F5F6FF;
 }
-
-.delete img { opacity: .6; }
-.delete:hover img { opacity: .8; }
 
 /* input status */
 
