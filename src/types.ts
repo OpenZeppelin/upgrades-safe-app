@@ -21,9 +21,10 @@ export interface SafeUpgradesProps {
 export interface Input {
   address: string,
   setAddress(address: string) : void
-  isValid: boolean
+  isValid: boolean | undefined
   isAddress: boolean
   error: string
+  reset: () => void
 }
 
 export interface Transaction {

@@ -6,8 +6,8 @@ import { SafeUpgradesProps, Validation } from './types'
 import { isProxyAdmin, isManaged } from './ethereum/Contract'
 import { AddressInput, useAddressInput } from './AddressInput'
 
-import { Button, Title, Section } from '@gnosis.pm/safe-react-components'
-import { WidgetWrapper, ButtonContainer } from './components'
+import { Section } from '@gnosis.pm/safe-react-components'
+import { WidgetWrapper, } from './components'
 import { ThemeProvider } from 'styled-components'
 import theme from './customTheme'
 
@@ -78,25 +78,23 @@ const SafeUpgrades: React.FC<SafeUpgradesProps> = ({ safe, ethereum }) => {
     safe.sdk.sendTransactions([tx])
   }
 
-
   return (
     <ThemeProvider theme={theme}>
       <WidgetWrapper>
         <div className={styles.card}>
           <div className={styles.header}>
+
             <h4>Upgrade proxy implementation</h4>
-            <Button
-                size='md'
-                color='primary'
-                variant='contained'
-                onClick={ sendTransaction }
-                disabled={ ! (proxyInput.isValid && newImplementationInput.isValid) }
-              >
-                Propose
-            </Button>
-            <button type="button">Propose</button>
-            <button type="button" disabled>Propose</button>
-           </div>
+
+            <button
+              type="button"
+              onClick={ sendTransaction }
+              disabled={ ! (proxyInput.isValid && newImplementationInput.isValid) } >
+              Propose
+            </button>
+
+          </div>
+
           <Section>
             <AddressInput
               name='proxy'
@@ -110,26 +108,45 @@ const SafeUpgrades: React.FC<SafeUpgradesProps> = ({ safe, ethereum }) => {
               input={ newImplementationInput }
             />
           </Section>
+
           <div className={styles.details}>
             <div className={styles.header}>
               <p>upgrade information</p>
             </div>
             <ul className={styles.nobullet}>
-              <li className={styles.success}>
-                <p className={styles.title}>This broxy is EIP 1967 compatible</p>
-              </li>
-              <li className={styles.error}>
-                <p className={styles.title}>New implementation can’t be a proxy contract</p>
-                <p className={styles.description}>The new implementation can’t be a proxy contract</p>
-              </li>
+
+              { proxyInput.isValid !== undefined
+                ? ( proxyInput.isValid
+                  ? <li className={styles.success}>
+                    <p className={styles.title}>This proxy is EIP 1967 compatible</p>
+                  </li>
+
+                  : <li className={styles.error}>
+                    <p className={styles.title}>Invalid proxy address</p>
+                    <p className={styles.description}>{ proxyInput.error }</p>
+                  </li>
+                )
+
+                : <></>
+              }
+
+              { newImplementationInput.isValid === false
+                ? <li className={styles.error}>
+                  <p className={styles.title}>Invalid new implementation address</p>
+                  <p className={styles.description}>{ newImplementationInput.error }</p>
+                </li>
+                : <></>
+              }
+
               <li className={styles.note}>
-                <p className={styles.title}>Some generic tip goes here</p>
-                <p className={styles.description}>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                <p className={styles.title}>Tip: put contract upgrades behind a dark timelock</p>
+                <p className={styles.description}>Upgrades might be bugfixes, in which case revealing the upgrade would trivially reveal the bug, possibly leading to exploits.</p>
               </li>
+
             </ul>
           </div>
         </div>
-        <footer><a href="https://defender.openzeppelin.com/" target="_blank">Powered by <img src="/oz_icon.svg"/><b>OpenZeppelin</b> | Defender</a></footer>
+        <footer><a href="https://defender.openzeppelin.com/" target="_blank" rel="noopener noreferrer">Powered by <img src="/oz_icon.svg" alt="OpenZeppelin" /><b>OpenZeppelin</b> | Defender</a></footer>
       </WidgetWrapper>
     </ThemeProvider>
   )

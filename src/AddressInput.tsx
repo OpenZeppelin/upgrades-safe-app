@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import { TextField } from '@gnosis.pm/safe-react-components'
 import { AddressValidator, Input } from './types'
 import Address from './ethereum/Address'
 import styles from './css/style.module.css';
@@ -20,8 +19,9 @@ export const AddressInput: React.FC<Props> = ({ name, label, input }) => {
         <div className={styles.input}>
           <div className={styles.address}>
             <img
+              alt=""
               className={styles.blockie}
-              onClick={ () => input.setAddress('') }
+              onClick={ () => input.reset() }
               src='/blockie.png'
             />
             <p>{ input.address }</p>
@@ -44,33 +44,43 @@ export const AddressInput: React.FC<Props> = ({ name, label, input }) => {
 export const useAddressInput = (validate: AddressValidator) : Input => {
   const [address, setAddress] = useState<string>('')
   const [isAddress, setIsAddress] = useState<boolean>(false)
-  const [isValid, setValid] = useState<boolean>(true)
+  const [isValid, setValid] = useState<boolean | undefined>(undefined)
   const [error, setError] = useState<string>('')
+
+  const reset = () => {
+    setAddress('')
+    setIsAddress(false)
+    setValid(undefined)
+    setError('')
+  }
 
   useEffect(() => {
     (async () => {
-      setIsAddress(false)
+      if (! address) return
+
       const addressResult = Address.parse(address)
 
       if (addressResult.isErr()) {
         setValid(false)
         setError(addressResult.error)
+        setIsAddress(false)
         return
       }
 
-      setIsAddress(true)
       const validationResult = await validate(addressResult.value)
 
       if (validationResult.isErr()) {
+        setIsAddress(true)
         setValid(false)
         setError(validationResult.error)
         return
       }
 
+      setIsAddress(true)
       setValid(true)
       setError('')
     })()
   }, [address])
 
-  return { address, setAddress, isValid, isAddress, error }
+  return { address, setAddress, isValid, isAddress, error, reset }
 }
