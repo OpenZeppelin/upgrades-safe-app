@@ -103,12 +103,12 @@ h5 {
 .input .error {
   height: 16px;
   width: 16px;
-  content: url(/ic_error.svg);
+  content: url(ic_error.svg);
 }
 .input .success {
   height: 16px;
   width: 16px;
-  content: url(/ic_success.svg);
+  content: url(ic_success.svg);
 }
 
 .input .loading {
