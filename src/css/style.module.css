@@ -173,9 +173,9 @@ li:last-child {
   margin-bottom: 4px;
 }
 
-li.note { list-style-image: url('/ic_info.svg'); }
-li.error { list-style-image: url('/ic_error.svg'); }
-li.success { list-style-image: url('/ic_success.svg'); }
+li.note { list-style-image: url('ic_info.svg'); }
+li.error { list-style-image: url('ic_error.svg'); }
+li.success { list-style-image: url('ic_success.svg'); }
 
 li .title {
   font-weight: bold;
