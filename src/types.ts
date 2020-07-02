@@ -23,6 +23,7 @@ export interface Input {
   setAddress(address: string) : void
   isValid: boolean | undefined
   isAddress: boolean
+  loading: boolean
   error: string
   reset: () => void
 }

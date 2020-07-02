@@ -10,6 +10,8 @@ interface Props {
 }
 
 export const AddressInput: React.FC<Props> = ({ name, label, input }) => {
+  const status = input.loading ? 'loading' : ( input.isValid ? 'success' : 'error' )
+
   return <div>
     <h5>{ label }</h5>
     {
@@ -18,18 +20,18 @@ export const AddressInput: React.FC<Props> = ({ name, label, input }) => {
       ? <div>
         <div className={styles.input}>
           <div className={styles.address}>
-            <img
-              alt=""
-              className={styles.blockie}
-              onClick={ () => input.reset() }
-              src='/blockie.png'
-            />
+            <img alt="" className={styles.blockie} src='/blockie.png' />
+
             <p>{ input.address }</p>
-            <button className={styles.delete}>
-              <img src='/ic_delete.svg'/>
+
+            <button
+              onClick={ () => input.reset() }
+              className={styles.delete}>
+              <img src='/ic_delete.svg' alt="reset input"/>
             </button>
           </div>
-          <div className={styles.success}></div>
+
+          <div className={styles[status]} title={input.error}></div>
         </div>
       </div>
 
@@ -50,6 +52,7 @@ export const useAddressInput = (validate: AddressValidator) : Input => {
   const [isAddress, setIsAddress] = useState<boolean>(false)
   const [isValid, setValid] = useState<boolean | undefined>(undefined)
   const [error, setError] = useState<string>('')
+  const [loading, setLoading] = useState<boolean>(false)
 
   const reset = () => {
     setAddress('')
@@ -61,6 +64,7 @@ export const useAddressInput = (validate: AddressValidator) : Input => {
   useEffect(() => {
     (async () => {
       if (! address) return
+      setLoading(true)
 
       const addressResult = Address.parse(address)
 
@@ -68,6 +72,7 @@ export const useAddressInput = (validate: AddressValidator) : Input => {
         setValid(false)
         setError(addressResult.error)
         setIsAddress(false)
+        setLoading(false)
         return
       }
 
@@ -77,14 +82,16 @@ export const useAddressInput = (validate: AddressValidator) : Input => {
         setIsAddress(true)
         setValid(false)
         setError(validationResult.error)
+        setLoading(false)
         return
       }
 
       setIsAddress(true)
       setValid(true)
       setError('')
+      setLoading(false)
     })()
   }, [address])
 
-  return { address, setAddress, isValid, isAddress, error, reset }
+  return { address, setAddress, isValid, isAddress, error, reset, loading }
 }
