@@ -51,9 +51,19 @@ h5 {
   border: 1px solid #D8DBE2;
   box-sizing: border-box;
   border-radius: 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 /* address component */
+
+.blockie {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px 0 0 4px;
+  opacity: .8;
+}
 
 .address {
   height: 24px;
@@ -66,18 +76,62 @@ h5 {
   align-items: flex-start;
 }
 
-.blockie {
-  width: 24px;
-  height: 24px;
-  border-radius: 4px 0 0 4px;
-  opacity: .8;
-}
-
 .address p {
   font-family: Roboto Mono, Monaco, monospace;
   font-size: 14px;
   margin: 0 8px;
 }
+
+/* delete address */
+
+.delete {
+  background: white;
+  cursor: pointer;
+  height: 24px;
+  padding: 3px 8px;
+  min-width: 0;
+  opacity: .8;
+}
+.delete:hover,
+.delete:focus {
+  opacity: 1;
+  background: #F5F6FF;
+}
+
+/* input status */
+
+.input .error {
+  height: 16px;
+  width: 16px;
+  content: url(ic_error.svg);
+}
+.input .success {
+  height: 16px;
+  width: 16px;
+  content: url(ic_success.svg);
+}
+
+.input .loading {
+  border: 2px solid #EFF1F3;
+  border-radius: 50%;
+  border-top: 2px solid #4E5DE4;
+  border-bottom: 2px solid #4E5DE4;
+  width: 12px;
+  height: 12px;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+}
+
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 
 /* Upgrade details*/
 
