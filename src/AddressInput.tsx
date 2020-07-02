@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { AddressValidator, Input } from './types'
 import Address from './ethereum/Address'
-import styles from './css/style.module.css';
+import Blockies from 'react-blockies'
+import styles from './css/style.module.css'
 
 interface Props {
   name: string
@@ -20,7 +21,13 @@ export const AddressInput: React.FC<Props> = ({ name, label, input }) => {
       ? <div>
         <div className={styles.input}>
           <div className={styles.address}>
-            <img alt="" className={styles.blockie} src='/blockie.png' />
+            <div className={styles.blockie}>
+              <Blockies
+                seed={ input.address.toLowerCase() }
+                className="blockie"
+                size={ 6 }
+              />
+            </div>
 
             <p>{ input.address }</p>
 
