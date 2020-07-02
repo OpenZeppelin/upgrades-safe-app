@@ -63,6 +63,7 @@ h5 {
   height: 24px;
   border-radius: 4px 0 0 4px;
   opacity: .8;
+  overflow: hidden;
 }
 
 .address {
