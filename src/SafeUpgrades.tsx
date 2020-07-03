@@ -6,8 +6,6 @@ import { SafeUpgradesProps, Validation } from './types'
 import { isProxyAdmin, isManaged } from './ethereum/Contract'
 import { AddressInput, useAddressInput } from './AddressInput'
 
-import { Section } from '@gnosis.pm/safe-react-components'
-
 import styles from './css/style.module.css'
 
 const SafeUpgrades: React.FC<SafeUpgradesProps> = ({ safe, ethereum }) => {
@@ -91,7 +89,7 @@ const SafeUpgrades: React.FC<SafeUpgradesProps> = ({ safe, ethereum }) => {
 
         </div>
 
-        <Section>
+        <div>
           <AddressInput
             name='proxy'
             label='Proxy address'
@@ -103,7 +101,7 @@ const SafeUpgrades: React.FC<SafeUpgradesProps> = ({ safe, ethereum }) => {
             label='New implementation address'
             input={ newImplementationInput }
           />
-        </Section>
+        </div>
 
         <div className={styles.details}>
           <div className={styles.header}>
