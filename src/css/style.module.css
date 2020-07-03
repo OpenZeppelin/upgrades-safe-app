@@ -104,12 +104,12 @@ h5 {
 .input .error {
   height: 16px;
   width: 16px;
-  content: url('/ic_error.svg');
+  content: url('ic_error.svg');
 }
 .input .success {
   height: 16px;
   width: 16px;
-  content: url('/ic_success.svg');
+  content: url('ic_success.svg');
 }
 
 .input .loading {
@@ -173,9 +173,9 @@ li:last-child {
   margin-bottom: 4px;
 }
 
-li.note { list-style-image: url('/ic_info.svg'); }
-li.error { list-style-image: url('/ic_error.svg'); }
-li.success { list-style-image: url('/ic_success.svg'); }
+li.note { list-style-image: url('ic_info.svg'); }
+li.error { list-style-image: url('ic_error.svg'); }
+li.success { list-style-image: url('ic_success.svg'); }
 
 li .title {
   font-weight: bold;

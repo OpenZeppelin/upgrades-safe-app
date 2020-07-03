@@ -11,7 +11,7 @@ import { WidgetWrapper, } from './components'
 import { ThemeProvider } from 'styled-components'
 import theme from './customTheme'
 
-import styles from './css/style.module.css'; 
+import styles from './css/style.module.css'
 
 const SafeUpgrades: React.FC<SafeUpgradesProps> = ({ safe, ethereum }) => {
   const [proxyAdminAddress, setProxyAdminAddress] = useState<string | undefined>()
@@ -146,7 +146,7 @@ const SafeUpgrades: React.FC<SafeUpgradesProps> = ({ safe, ethereum }) => {
             </ul>
           </div>
         </div>
-        <footer><a href="https://defender.openzeppelin.com/" target="_blank" rel="noopener noreferrer">Powered by <img src="/oz_icon.svg" alt="OpenZeppelin" /><b>OpenZeppelin</b> | Defender</a></footer>
+        <footer><a href="https://docs.openzeppelin.com/upgrades" target="_blank" rel="noopener noreferrer">Powered by <img src="oz_icon.svg" alt="OpenZeppelin" /><b>OpenZeppelin</b> | Upgrades</a></footer>
       </WidgetWrapper>
     </ThemeProvider>
   )
