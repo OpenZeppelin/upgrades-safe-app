@@ -139,7 +139,7 @@ h5 {
   box-sizing: border-box;
   border: 1px solid #D8DBE2;
   border-radius: 6px;
-  margin-top: 32px;
+  margin-top: 24px;
 }
 
 .details .header {
@@ -181,7 +181,7 @@ li .title {
 }
 
 li .description {
-  line-height: 1.2;
+  line-height: 1.4;
 }
 
 /* Button styles */
