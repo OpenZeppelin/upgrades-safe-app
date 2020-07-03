@@ -1,47 +1,51 @@
 import React from 'react'
 import { act } from 'react-dom/test-utils'
 import { mount, ReactWrapper } from 'enzyme'
+import 'jest-canvas-mock'
 
 import SafeUpgrades from './SafeUpgrades'
 import EthereumBridge from './ethereum/EthereumBridge'
 import { addressBook, externallyManagedProxy, externallyManagedProxyAdmin, unmanagedProxyAdmin, safe, safeManagedProxy, previousImplementation, newImplementation } from './Mocks'
 
-jest.mock('./ethereum/EthereumBridge')
 
 describe("SafeUpgrades", () => {
   let ethereum: EthereumBridge
   let wrapper: ReactWrapper
   let proxyInput: ReactWrapper
-  let proxyLabel: ReactWrapper
   let implementationInput: ReactWrapper
-  let implementationLabel: ReactWrapper
-  let submitButton: ReactWrapper
 
   beforeEach(() => {
     ethereum = new EthereumBridge()
+    ethereum.detect = jest.fn()
+    ethereum.getCode = jest.fn()
+    ethereum.hasBytecode = jest.fn()
+
+    safe.sdk.sendTransactions = jest.fn()
+
     wrapper = mount(<SafeUpgrades safe={ safe } ethereum={ ethereum } />)
 
     proxyInput = wrapper.find('input[name="proxy"]').at(0)
-    proxyLabel = wrapper.find('label').at(0)
-
     implementationInput = wrapper.find('input[name="new-implementation"]').at(0)
-    implementationLabel = wrapper.find('label').at(1)
-
-    submitButton = wrapper.find('button')
   })
 
   afterEach(() => {
     wrapper.unmount()
   })
 
+  const getInputError = (input: string) : ReactWrapper => {
+    return wrapper.find(`#${ input }-input-error`).at(0)
+  }
+
   // proxy input validation
 
-  it('fails if the proxy input is not a valid address', () => {
-    act(() => {
-      proxyInput.simulate('change', { target: { value: addressBook.notAnAddress } })
+  it('fails if the proxy input is not a valid address', async () => {
+    await act(async () => {
+      proxyInput.props().onChange({ target: { value: addressBook.notAnAddress } })
     })
 
-    expect(proxyLabel.text()).toBe("Contract or address expected")
+    wrapper.update()
+
+    expect(getInputError('proxy').text()).toBe("Contract or address expected")
   })
 
 
@@ -49,10 +53,12 @@ describe("SafeUpgrades", () => {
     ethereum.detect.mockResolvedValue(null)
 
     await act(async () => {
-      proxyInput.simulate('change', { target: { value: addressBook.notAProxy } })
+      proxyInput.props().onChange({ target: { value: addressBook.notAProxy } })
     })
 
-    expect(proxyLabel.text()).toBe("This proxy is not EIP 1967 compatible")
+    wrapper.update()
+
+    expect(getInputError('proxy').text()).toBe("This proxy is not EIP 1967 compatible")
   })
 
 
@@ -60,10 +66,12 @@ describe("SafeUpgrades", () => {
     ethereum.detect.mockResolvedValue(externallyManagedProxy)
 
     await act(async () => {
-      proxyInput.simulate('change', { target: { value: addressBook.notAProxy } })
+      proxyInput.props().onChange({ target: { value: addressBook.notAProxy } })
     })
 
-    expect(proxyLabel.text()).toBe("This proxy is not managed by this Safe")
+    wrapper.update()
+
+    expect(getInputError('proxy').text()).toBe("This proxy is not managed by this Safe")
   })
 
 
@@ -71,10 +79,12 @@ describe("SafeUpgrades", () => {
     ethereum.detect.mockResolvedValue(externallyManagedProxyAdmin)
 
     await act(async () => {
-      proxyInput.simulate('change', { target: { value: addressBook.proxy } })
+      proxyInput.props().onChange({ target: { value: addressBook.proxy } })
     })
 
-    expect(proxyLabel.text()).toBe("This proxy's admin is not managed by this Safe")
+    wrapper.update()
+
+    expect(getInputError('proxy').text()).toBe("This proxy's admin is not managed by this Safe")
   })
 
 
@@ -82,20 +92,24 @@ describe("SafeUpgrades", () => {
     ethereum.detect.mockResolvedValue(unmanagedProxyAdmin)
 
     await act(async () => {
-      proxyInput.simulate('change', { target: { value: addressBook.proxy } })
+      proxyInput.props().onChange({ target: { value: addressBook.proxy } })
     })
 
-    expect(proxyLabel.text()).toBe("This proxy's admin is not managed by any address")
+    wrapper.update()
+
+    expect(getInputError('proxy').text()).toBe("This proxy's admin is not managed by any address")
   })
 
   // implementation input
 
   it('fails if the implementation input is not a valid address', () => {
     act(() => {
-      implementationInput.simulate('change', { target: { value: addressBook.notAnAddress } })
+      implementationInput.props().onChange({ target: { value: addressBook.notAnAddress } })
     })
 
-    expect(implementationLabel.text()).toBe("Contract or address expected")
+    wrapper.update()
+
+    expect(getInputError('new-implementation').text()).toBe("Contract or address expected")
   })
 
 
@@ -103,10 +117,12 @@ describe("SafeUpgrades", () => {
     ethereum.getCode.mockResolvedValue('0x')
 
     await act(async () => {
-      implementationInput.simulate('change', { target: { value: addressBook.newImplementation } })
+      implementationInput.props().onChange({ target: { value: addressBook.newImplementation } })
     })
 
-    expect(implementationLabel.text()).toBe("This implementation has no bytecode")
+    wrapper.update()
+
+    expect(getInputError('new-implementation').text()).toBe("This implementation has no bytecode")
   })
 
 
@@ -117,15 +133,19 @@ describe("SafeUpgrades", () => {
       .mockResolvedValueOnce(null)
 
     await act(async () => {
-      proxyInput.simulate('change', { target: { value: addressBook.proxy } })
+      proxyInput.props().onChange({ target: { value: addressBook.proxy } })
     })
+
+    wrapper.update()
 
     await act(async () => {
-      implementationInput.simulate('change', { target: { value: addressBook.previousImplementation } })
+      implementationInput.props().onChange({ target: { value: addressBook.previousImplementation } })
     })
 
-    expect(proxyLabel.text()).toBe("Proxy address")
-    expect(implementationLabel.text()).toBe("Proxy already points to this implementation")
+    wrapper.update()
+
+    expect(getInputError('proxy').get()).toBe(undefined)
+    expect(getInputError('new-implementation').text()).toBe("Proxy already points to this implementation")
   })
 
 
@@ -134,16 +154,18 @@ describe("SafeUpgrades", () => {
     ethereum.detect.mockResolvedValue(safeManagedProxy)
 
     await act(async () => {
-      implementationInput.simulate('change', { target: { value: addressBook.proxy } })
+      implementationInput.props().onChange({ target: { value: addressBook.proxy } })
     })
 
-    expect(implementationLabel.text()).toBe("New implementation can't be a proxy contract")
+    wrapper.update()
+
+    expect(getInputError('new-implementation').text()).toBe("New implementation can't be a proxy contract")
   })
 
   // form validation
 
   it('renders submit button disabled by default', () => {
-    expect(submitButton.prop('disabled')).toBe(true)
+    expect(wrapper.find('button[name="submit"]').prop('disabled')).toBe(true)
   })
 
 
@@ -151,13 +173,15 @@ describe("SafeUpgrades", () => {
     ethereum.detect.mockResolvedValue(safeManagedProxy)
 
     await act(async () => {
-      proxyInput.simulate('change', { target: { value: addressBook.proxy } })
-      implementationInput.simulate('change', { target: { value: '' } })
+      proxyInput.props().onChange({ target: { value: addressBook.proxy } })
+      implementationInput.props().onChange({ target: { value: '' } })
     })
 
-    expect(proxyLabel.text()).toBe("Proxy address")
-    expect(implementationLabel.text()).toBe("New implementation address")
-    expect(submitButton.prop('disabled')).toBe(true)
+    wrapper.update()
+
+    expect(getInputError('proxy').get()).toBe(undefined)
+    expect(getInputError('new-implementation').get()).toBe(undefined)
+    expect(wrapper.find('button[name="submit"]').prop('disabled')).toBe(true)
   })
 
 
@@ -166,13 +190,15 @@ describe("SafeUpgrades", () => {
     ethereum.hasBytecode.mockResolvedValue(true)
 
     await act(async () => {
-      proxyInput.simulate('change', { target: { value: '' } })
-      implementationInput.simulate('change', { target: { value: addressBook.newImplementation } })
+      proxyInput.props().onChange({ target: { value: '' } })
+      implementationInput.props().onChange({ target: { value: addressBook.newImplementation } })
     })
 
-    expect(proxyLabel.text()).toBe("Proxy address")
-    expect(implementationLabel.text()).toBe("New implementation address")
-    expect(submitButton.prop('disabled')).toBe(true)
+    wrapper.update()
+
+    expect(getInputError('proxy').get()).toBe(undefined)
+    expect(getInputError('new-implementation').get()).toBe(undefined)
+    expect(wrapper.find('button[name="submit"]').prop('disabled')).toBe(true)
   })
 
 
@@ -181,13 +207,15 @@ describe("SafeUpgrades", () => {
     ethereum.hasBytecode.mockResolvedValue(false)
 
     await act(async () => {
-      proxyInput.simulate('change', { target: { value: addressBook.proxy } })
-      implementationInput.simulate('change', { target: { value: addressBook.newImplementation } })
+      proxyInput.props().onChange({ target: { value: addressBook.proxy } })
+      implementationInput.props().onChange({ target: { value: addressBook.newImplementation } })
     })
 
-    expect(proxyLabel.text()).toBe("Proxy address")
-    expect(implementationLabel.text()).not.toBe("New implementation address")
-    expect(submitButton.prop('disabled')).toBe(true)
+    wrapper.update()
+
+    expect(getInputError('proxy').get()).toBe(undefined)
+    expect(getInputError('new-implementation').get()).toBe(undefined)
+    expect(wrapper.find('button[name="submit"]').prop('disabled')).toBe(true)
   })
 
 
@@ -198,13 +226,15 @@ describe("SafeUpgrades", () => {
       .mockResolvedValueOnce(null) // implementation
 
     await act(async () => {
-      proxyInput.simulate('change', { target: { value: addressBook.proxy } })
-      implementationInput.simulate('change', { target: { value: addressBook.newImplementation } })
+      proxyInput.props().onChange({ target: { value: addressBook.proxy } })
+      implementationInput.props().onChange({ target: { value: addressBook.newImplementation } })
     })
 
-    expect(proxyLabel.text()).not.toBe("Proxy address")
-    expect(implementationLabel.text()).toBe("New implementation address")
-    expect(submitButton.prop('disabled')).toBe(true)
+    wrapper.update()
+
+    expect(getInputError('proxy').get()).toBe(undefined)
+    expect(getInputError('new-implementation').get()).toBe(undefined)
+    expect(wrapper.find('button[name="submit"]').prop('disabled')).toBe(true)
   })
 
 
@@ -215,38 +245,37 @@ describe("SafeUpgrades", () => {
       .mockResolvedValueOnce(null) // implementation
 
     await act(async () => {
-      proxyInput.simulate('change', { target: { value: addressBook.proxy } })
-      implementationInput.simulate('change', { target: { value: addressBook.newImplementation } })
+      proxyInput.props().onChange({ target: { value: addressBook.proxy } })
+      implementationInput.props().onChange({ target: { value: addressBook.newImplementation } })
     })
 
-    expect(proxyLabel.text()).toBe("Proxy address")
-    expect(implementationLabel.text()).toBe("New implementation address")
-    expect(submitButton.prop('disabled')).toBe(true)
+    wrapper.update()
+
+    expect(getInputError('proxy').get()).toBe(undefined)
+    expect(getInputError('new-implementation').get()).toBe(undefined)
+    expect(wrapper.find('button[name="submit"]').prop('disabled')).toBe(false)
   })
 
 
   it('submits transaction to Safe', async () => {
-    // safe.sdk.sendTransactions = jest.fn()
-    // ethereum.hasBytecode.mockResolvedValue(true)
-    // ethereum.detect
-    //   .mockResolvedValueOnce(safeManagedProxy) // proxy
-    //   .mockResolvedValueOnce(null) // implementation
+    const tx = ethereum.buildUpgradeTransaction(addressBook.proxy, addressBook.newImplementation, undefined)
 
-    // act(() => {
-    //   proxyInput.simulate('change', { target: { value: addressBook.notAnAddress } })
-    // })
+    ethereum.hasBytecode.mockResolvedValue(true)
+    ethereum.detect
+      .mockResolvedValueOnce(safeManagedProxy) // proxy
+      .mockResolvedValueOnce(null) // implementation
 
-    // await act(async () => {
-    //   proxyInput.props().onChange({ target: { value: 'asd' } })
+    await act(async () => {
+      proxyInput.props().onChange({ target: { value: addressBook.proxy } })
+      implementationInput.props().onChange({ target: { value: addressBook.newImplementation } })
+    })
 
-    //   // implementationInput.simulate('change', { target: { value: addressBook.newImplementation } })
-    //   // submitButton.props().onClick()
-    // })
+    wrapper.update()
 
-    // console.log(1, proxyInput.props())
+    await act(async () => {
+      wrapper.find('button[name="submit"]').props().onClick()
+    })
 
-
-    // const tx = undefined
-    // expect(safe.sdk.sendTransactions).toBeCalledWith([tx])
+    expect(safe.sdk.sendTransactions).toBeCalledWith([tx])
   })
 })

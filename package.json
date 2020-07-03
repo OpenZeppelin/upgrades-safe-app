@@ -41,9 +41,9 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test:all": "buidler test && react-scripts test",
+    "test:all": "buidler test && react-scripts test:ui",
     "test:buidler": "buidler test",
-    "test:ui": "react-scripts test",
+    "test:ui": "react-scripts test --silent",
     "eject": "react-scripts eject",
     "compile": "buidler compile",
     "deploy": "yarn build && ipfs add -r build"
@@ -62,5 +62,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "jest-canvas-mock": "^2.2.0"
   }
 }
