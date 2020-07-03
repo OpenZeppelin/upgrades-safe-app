@@ -28,7 +28,7 @@ h5 {
 .card {
 	border-radius: 4px;
 	/* padding: 36px 48px;*/
-	margin: auto;
+	margin-right: auto;
 	max-width: 520px;
 	max-height: 428px;
 	/* box-shadow: 0px 4px 10px rgba(44, 55, 75, 0.1); */
