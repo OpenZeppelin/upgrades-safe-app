@@ -1,5 +1,5 @@
 body {
-  background: #F9FAFB;
+  /* background: #F9FAFB; */
   font-family: "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
   line-height: 24px;
   color: #575C66;
@@ -26,13 +26,12 @@ h5 {
 }
 
 .card {
-	background: white;
 	border-radius: 4px;
-	padding: 36px 48px;
+	/* padding: 36px 48px;*/
 	margin: auto;
 	max-width: 520px;
 	max-height: 428px;
-	box-shadow: 0px 4px 10px rgba(44, 55, 75, 0.1);
+	/* box-shadow: 0px 4px 10px rgba(44, 55, 75, 0.1); */
 }
 
 .header {
