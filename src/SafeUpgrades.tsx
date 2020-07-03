@@ -74,71 +74,69 @@ const SafeUpgrades: React.FC<SafeUpgradesProps> = ({ safe, ethereum }) => {
   }
 
   return (
-    <div>
-      <div className={styles.card}>
+    <div className={styles.card}>
+      <div className={styles.header}>
+
+        <h4>Upgrade proxy implementation</h4>
+
+        <button
+          type="button"
+          onClick={ sendTransaction }
+          disabled={ ! (proxyInput.isValid && newImplementationInput.isValid) } >
+          Propose
+        </button>
+
+      </div>
+
+      <div>
+        <AddressInput
+          name='proxy'
+          label='Proxy address'
+          input={ proxyInput }
+        />
+
+        <AddressInput
+          name='new-implementation'
+          label='New implementation address'
+          input={ newImplementationInput }
+        />
+      </div>
+
+      <div className={styles.details}>
         <div className={styles.header}>
-
-          <h4>Upgrade proxy implementation</h4>
-
-          <button
-            type="button"
-            onClick={ sendTransaction }
-            disabled={ ! (proxyInput.isValid && newImplementationInput.isValid) } >
-            Propose
-          </button>
-
+          <p>upgrade information</p>
         </div>
+        <ul className={styles.nobullet}>
 
-        <div>
-          <AddressInput
-            name='proxy'
-            label='Proxy address'
-            input={ proxyInput }
-          />
-
-          <AddressInput
-            name='new-implementation'
-            label='New implementation address'
-            input={ newImplementationInput }
-          />
-        </div>
-
-        <div className={styles.details}>
-          <div className={styles.header}>
-            <p>upgrade information</p>
-          </div>
-          <ul className={styles.nobullet}>
-
-            { proxyInput.isValid !== undefined
-              ? ( proxyInput.isValid
-                ? <li className={styles.success}>
-                  <p className={styles.title}>This proxy is EIP 1967 compatible</p>
-                </li>
-
-                : <li className={styles.error}>
-                  <p className={styles.title}>Invalid proxy address</p>
-                  <p className={styles.description}>{ proxyInput.error }</p>
-                </li>
-              )
-
-              : <></>
-            }
-
-            { newImplementationInput.isValid === false
-              ? <li className={styles.error}>
-                <p className={styles.title}>Invalid new implementation address</p>
-                <p className={styles.description}>{ newImplementationInput.error }</p>
+          { proxyInput.isValid !== undefined
+            ? ( proxyInput.isValid
+              ? <li className={styles.success}>
+                <p className={styles.title}>This proxy is EIP 1967 compatible</p>
               </li>
-              : <></>
-            }
 
-            <li className={styles.note}>
-              <p className={styles.title}>Tip: put contract upgrades behind a dark timelock</p>
-              <p className={styles.description}>Upgrades might be bugfixes, in which case revealing the upgrade would trivially reveal the bug, possibly leading to exploits.</p>
+              : <li className={styles.error}>
+                <p className={styles.title}>Invalid proxy address</p>
+                <p className={styles.description}>{ proxyInput.error }</p>
+              </li>
+            )
+
+            : <></>
+          }
+
+          { newImplementationInput.isValid === false
+            ? <li className={styles.error}>
+              <p className={styles.title}>Invalid new implementation address</p>
+              <p className={styles.description}>{ newImplementationInput.error }</p>
             </li>
+            : <></>
+          }
 
-          </ul>
-        </div>
+          <li className={styles.note}>
+            <p className={styles.title}>Tip: put contract upgrades behind a dark timelock</p>
+            <p className={styles.description}>Upgrades might be bugfixes, in which case revealing the upgrade would trivially reveal the bug, possibly leading to exploits.</p>
+          </li>
+
+        </ul>
       </div>
       <footer><a href="https://docs.openzeppelin.com/upgrades" target="_blank" rel="noopener noreferrer">Powered by <img src="oz_icon.svg" alt="OpenZeppelin" /><b>OpenZeppelin</b> | Upgrades</a></footer>
     </div>
