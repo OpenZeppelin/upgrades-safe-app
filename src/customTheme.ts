@@ -2,8 +2,8 @@ import { theme } from '@gnosis.pm/safe-react-components'
 
 const copyTheme = { ...theme }
 
-copyTheme.colors.primary = '#02d396'
-copyTheme.colors.primaryHover = '#00c58a'
+copyTheme.colors.primary = '#2C374B'
+copyTheme.colors.primaryHover = '#4E5DE4'
 copyTheme.colors.primaryLight = '#d5f6ed'
 
 copyTheme.colors.secondary = '#966aed'
