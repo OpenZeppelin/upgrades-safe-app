@@ -34,7 +34,7 @@ export const AddressInput: React.FC<Props> = ({ name, label, input }) => {
             <button
               onClick={ () => input.reset() }
               className={styles.delete}>
-              <img src='/ic_delete.svg' alt="reset input"/>
+              <img src='ic_delete.svg' alt="reset input"/>
             </button>
           </div>
 
