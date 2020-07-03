@@ -142,20 +142,6 @@ h5 {
   margin-top: 24px;
 }
 
-.details .header {
-  padding: 16px;
-  border-bottom: 1px solid #D8DBE2;
-}
-
-.details .header p {
-  font-weight: bold;
-  font-size: 10px;
-  line-height: 10px;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: #818998; 
-}
-
 .nobullet {
   list-style-type: none;
   padding: 16px;

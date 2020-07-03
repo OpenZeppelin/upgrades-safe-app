@@ -103,9 +103,6 @@ const SafeUpgrades: React.FC<SafeUpgradesProps> = ({ safe, ethereum }) => {
       </div>
 
       <div className={styles.details}>
-        <div className={styles.header}>
-          <p>upgrade information</p>
-        </div>
         <ul className={styles.nobullet}>
 
           { proxyInput.isValid !== undefined
