@@ -83,6 +83,8 @@ export const useAddressInput = (validate: AddressValidator) : Input => {
         return
       }
 
+      setIsAddress(true)
+
       const validationResult = await validate(addressResult.value)
 
       if (validationResult.isErr()) {
@@ -93,7 +95,6 @@ export const useAddressInput = (validate: AddressValidator) : Input => {
         return
       }
 
-      setIsAddress(true)
       setValid(true)
       setError('')
       setLoading(false)
