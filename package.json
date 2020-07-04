@@ -41,7 +41,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test:all": "buidler test && react-scripts test:ui",
+    "test": "buidler test && react-scripts test:ui",
     "test:buidler": "buidler test",
     "test:ui": "react-scripts test --silent",
     "eject": "react-scripts eject",
