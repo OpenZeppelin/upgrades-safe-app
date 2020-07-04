@@ -120,8 +120,8 @@ button:active:not(:disabled) {
   min-width: 0;
   opacity: .8;
 }
-.delete:hover,
-.delete:focus {
+button.delete:hover:hover:not(:disabled),
+button.delete:focus:not(:disabled) {
   opacity: 1;
   background: #F5F6FF;
 }
