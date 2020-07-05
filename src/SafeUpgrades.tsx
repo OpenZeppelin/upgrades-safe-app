@@ -22,9 +22,16 @@ const SafeUpgrades: React.FC<SafeUpgradesProps> = ({ safe, ethereum }) => {
     setProxyAdminAddress(undefined)
     setCurrentImplementationAddress(undefined)
 
+    const hasBytecode = await ethereum.hasBytecode(address)
+
+    if (! hasBytecode) {
+      return err('This address seems to be an Externally Owned Account, a proxy was expected.')
+    }
+
     const Eip1967 = await ethereum.detect(address)
+
     if (Eip1967 === null) {
-      return err('This proxy is not EIP 1967 compatible')
+      return err('This contract is not an EIP 1967 compatible proxy')
     }
 
     const safeAddress = safe.info?.safeAddress || ''
@@ -65,6 +72,7 @@ const SafeUpgrades: React.FC<SafeUpgradesProps> = ({ safe, ethereum }) => {
     }
 
     const Eip1967 = await ethereum.detect(address)
+
     if (Eip1967 !== null) {
       return err("New implementation can't be a proxy contract")
     }
