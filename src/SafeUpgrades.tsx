@@ -22,9 +22,16 @@ const SafeUpgrades: React.FC<SafeUpgradesProps> = ({ safe, ethereum }) => {
     setProxyAdminAddress(undefined)
     setCurrentImplementationAddress(undefined)
 
+    const hasBytecode = await ethereum.hasBytecode(address)
+
+    if (! hasBytecode) {
+      return err('There is no contract in this address')
+    }
+
     const Eip1967 = await ethereum.detect(address)
+
     if (Eip1967 === null) {
-      return err('This proxy is not EIP 1967 compatible')
+      return err('This contract is not an EIP 1967 compatible proxy')
     }
 
     const safeAddress = safe.info?.safeAddress || ''
@@ -61,10 +68,11 @@ const SafeUpgrades: React.FC<SafeUpgradesProps> = ({ safe, ethereum }) => {
     const hasBytecode = await ethereum.hasBytecode(address)
 
     if (! hasBytecode) {
-      return err('This implementation has no bytecode')
+      return err('There is no contract in this address')
     }
 
     const Eip1967 = await ethereum.detect(address)
+
     if (Eip1967 !== null) {
       return err("New implementation can't be a proxy contract")
     }

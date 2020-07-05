@@ -49,7 +49,21 @@ describe("SafeUpgrades", () => {
   })
 
 
+  it('fails if the proxy address is an external owned account', async () => {
+    ethereum.hasBytecode.mockResolvedValue(false)
+
+    await act(async () => {
+      proxyInput.props().onChange({ target: { value: addressBook.notAProxy } })
+    })
+
+    wrapper.update()
+
+    expect(getInputError('proxy').text()).toBe("There is no contract in this address")
+  })
+
+
   it('fails if the proxy address is not EIP 1967 compatible', async () => {
+    ethereum.hasBytecode.mockResolvedValue(true)
     ethereum.detect.mockResolvedValue(null)
 
     await act(async () => {
@@ -58,11 +72,12 @@ describe("SafeUpgrades", () => {
 
     wrapper.update()
 
-    expect(getInputError('proxy').text()).toBe("This proxy is not EIP 1967 compatible")
+    expect(getInputError('proxy').text()).toBe("This contract is not an EIP 1967 compatible proxy")
   })
 
 
   it('fails if the proxy is not managed by the Safe', async () => {
+    ethereum.hasBytecode.mockResolvedValue(true)
     ethereum.detect.mockResolvedValue(externallyManagedProxy)
 
     await act(async () => {
@@ -76,6 +91,7 @@ describe("SafeUpgrades", () => {
 
 
   it('fails if the proxyAdmin is not managed by the Safe', async () => {
+    ethereum.hasBytecode.mockResolvedValue(true)
     ethereum.detect.mockResolvedValue(externallyManagedProxyAdmin)
 
     await act(async () => {
@@ -89,6 +105,7 @@ describe("SafeUpgrades", () => {
 
 
   it('fails if the proxyAdmin is not managed by any address', async () => {
+    ethereum.hasBytecode.mockResolvedValue(true)
     ethereum.detect.mockResolvedValue(unmanagedProxyAdmin)
 
     await act(async () => {
@@ -122,7 +139,7 @@ describe("SafeUpgrades", () => {
 
     wrapper.update()
 
-    expect(getInputError('new-implementation').text()).toBe("This implementation has no bytecode")
+    expect(getInputError('new-implementation').text()).toBe("There is no contract in this address")
   })
 
 
@@ -170,6 +187,7 @@ describe("SafeUpgrades", () => {
 
 
   it('renders submit button disabled if proxy is valid but implementation is empty', async () => {
+    ethereum.hasBytecode.mockResolvedValue(true)
     ethereum.detect.mockResolvedValue(safeManagedProxy)
 
     await act(async () => {
@@ -186,8 +204,8 @@ describe("SafeUpgrades", () => {
 
 
   it('renders submit button disabled if implementation is valid but proxy is empty', async () => {
-    ethereum.detect.mockResolvedValue(null)
     ethereum.hasBytecode.mockResolvedValue(true)
+    ethereum.detect.mockResolvedValue(null)
 
     await act(async () => {
       proxyInput.props().onChange({ target: { value: '' } })
@@ -203,8 +221,8 @@ describe("SafeUpgrades", () => {
 
 
   it('renders submit button disabled if proxy is valid but implementation is not', async () => {
-    ethereum.detect.mockResolvedValue(safeManagedProxy)
     ethereum.hasBytecode.mockResolvedValue(false)
+    ethereum.detect.mockResolvedValue(safeManagedProxy)
 
     await act(async () => {
       proxyInput.props().onChange({ target: { value: addressBook.proxy } })
