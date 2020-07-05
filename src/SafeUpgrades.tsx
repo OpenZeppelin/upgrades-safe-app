@@ -88,6 +88,7 @@ const SafeUpgrades: React.FC<SafeUpgradesProps> = ({ safe, ethereum }) => {
 
             <button
               type="button"
+              name="submit"
               onClick={ sendTransaction }
               disabled={ ! (proxyInput.isValid && newImplementationInput.isValid) } >
               Propose
@@ -123,7 +124,7 @@ const SafeUpgrades: React.FC<SafeUpgradesProps> = ({ safe, ethereum }) => {
 
                   : <li className={styles.error}>
                     <p className={styles.title}>Invalid proxy address</p>
-                    <p className={styles.description}>{ proxyInput.error }</p>
+                    <p id="proxy-input-error" className={styles.description}>{ proxyInput.error }</p>
                   </li>
                 )
 
@@ -133,7 +134,7 @@ const SafeUpgrades: React.FC<SafeUpgradesProps> = ({ safe, ethereum }) => {
               { newImplementationInput.isValid === false
                 ? <li className={styles.error}>
                   <p className={styles.title}>Invalid new implementation address</p>
-                  <p className={styles.description}>{ newImplementationInput.error }</p>
+                  <p id="new-implementation-input-error" className={styles.description}>{ newImplementationInput.error }</p>
                 </li>
                 : <></>
               }
