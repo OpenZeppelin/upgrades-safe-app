@@ -25,7 +25,7 @@ const SafeUpgrades: React.FC<SafeUpgradesProps> = ({ safe, ethereum }) => {
     const hasBytecode = await ethereum.hasBytecode(address)
 
     if (! hasBytecode) {
-      return err('This address seems to be an Externally Owned Account, a proxy was expected.')
+      return err('There is no contract in this address')
     }
 
     const Eip1967 = await ethereum.detect(address)
@@ -68,7 +68,7 @@ const SafeUpgrades: React.FC<SafeUpgradesProps> = ({ safe, ethereum }) => {
     const hasBytecode = await ethereum.hasBytecode(address)
 
     if (! hasBytecode) {
-      return err('This implementation has no bytecode')
+      return err('There is no contract in this address')
     }
 
     const Eip1967 = await ethereum.detect(address)

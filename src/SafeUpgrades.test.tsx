@@ -51,7 +51,6 @@ describe("SafeUpgrades", () => {
 
   it('fails if the proxy address is an external owned account', async () => {
     ethereum.hasBytecode.mockResolvedValue(false)
-    ethereum.detect.mockResolvedValue(null)
 
     await act(async () => {
       proxyInput.props().onChange({ target: { value: addressBook.notAProxy } })
@@ -59,7 +58,7 @@ describe("SafeUpgrades", () => {
 
     wrapper.update()
 
-    expect(getInputError('proxy').text()).toBe("This address seems to be an Externally Owned Account, a proxy was expected")
+    expect(getInputError('proxy').text()).toBe("There is no contract in this address")
   })
 
 
@@ -140,7 +139,7 @@ describe("SafeUpgrades", () => {
 
     wrapper.update()
 
-    expect(getInputError('new-implementation').text()).toBe("This implementation has no bytecode")
+    expect(getInputError('new-implementation').text()).toBe("There is no contract in this address")
   })
 
 

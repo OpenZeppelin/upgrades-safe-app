@@ -16,19 +16,19 @@ In order to interact with a real Safe SDK, you will need to deploy the app to IP
 To test logic components, run:
 
 ```bash
-yarn test:buidler
+$ yarn test:buidler
 ```
 
 To test the UI, run:
 
 ```bash
-yarn test:ui
+$ yarn test:ui
 ```
 
 And to test the whole suite, run:
 
 ```bash
-yarn test
+$ yarn test
 ```
 
 ## Deployment
