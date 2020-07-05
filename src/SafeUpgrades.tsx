@@ -26,7 +26,7 @@ const SafeUpgrades: React.FC<SafeUpgradesProps> = ({ safe, ethereum }) => {
     const Eip1967 = await ethereum.detect(address)
 
     if (Eip1967 === null) {
-      return err('This contract is not an EIP 1967 compatible proxy')
+      return err('This contract is not EIP 1967 compatible')
     }
 
     const safeAddress = safe.info?.safeAddress || ''
@@ -85,21 +85,21 @@ const SafeUpgrades: React.FC<SafeUpgradesProps> = ({ safe, ethereum }) => {
     <div className={styles.card}>
       <div className={styles.header}>
 
-        <h4>Upgrade proxy implementation</h4>
+        <h4>Upgrade a contract</h4>
 
         <button
           type="button"
           name="submit"
           onClick={ sendTransaction }
           disabled={ ! (proxyInput.isValid && newImplementationInput.isValid) } >
-          Propose
+          Upgrade
         </button>
 
       </div>
 
       <AddressInput
         name='proxy'
-        label='Proxy address'
+        label='Contract address'
         input={ proxyInput }
       />
 
@@ -117,11 +117,11 @@ const SafeUpgrades: React.FC<SafeUpgradesProps> = ({ safe, ethereum }) => {
               { proxyInput.isValid !== undefined
                 ? ( proxyInput.isValid
                   ? <li className={styles.success}>
-                      <p className={styles.title}>This proxy is EIP 1967 compatible</p>
+                      <p className={styles.title}>This contract is EIP 1967 compatible</p>
                     </li>
 
                     : <li className={styles.error}>
-                      <p className={styles.title}>Invalid proxy address</p>
+                      <p className={styles.title}>Invalid contract address</p>
                       <p id="proxy-input-error" className={styles.description}>{ proxyInput.error }</p>
                     </li>
                   )
