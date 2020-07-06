@@ -72,7 +72,7 @@ export default class EthereumBridge {
   }
 
   private encodeProxyTx(newImplementationAddress: string) : string {
-    const proxyAddressInterface = new ethers.utils.Interface(AdminUpgradeabilityProxyABI)
-    return proxyAddressInterface.functions.upgradeTo.encode([ newImplementationAddress ])
+    const proxyInterface = new ethers.utils.Interface(AdminUpgradeabilityProxyABI)
+    return proxyInterface.functions.upgradeTo.encode([ newImplementationAddress ])
   }
 }

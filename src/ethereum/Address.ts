@@ -1,4 +1,3 @@
-
 import { Result, ok, err } from '../Result'
 import { hexZeroPad, getAddress } from 'ethers/utils'
 
