@@ -89,6 +89,7 @@ const SafeUpgrades: React.FC<SafeUpgradesProps> = ({ safe, ethereum }) => {
 
         <button
           type="button"
+          name="submit"
           onClick={ sendTransaction }
           disabled={ ! (proxyInput.isValid && newImplementationInput.isValid) } >
           Propose
@@ -96,53 +97,50 @@ const SafeUpgrades: React.FC<SafeUpgradesProps> = ({ safe, ethereum }) => {
 
       </div>
 
-      <div>
-        <AddressInput
-          name='proxy'
-          label='Proxy address'
-          input={ proxyInput }
-        />
+      <AddressInput
+        name='proxy'
+        label='Proxy address'
+        input={ proxyInput }
+      />
 
-        <AddressInput
-          name='new-implementation'
-          label='New implementation address'
-          input={ newImplementationInput }
-        />
-      </div>
+      <AddressInput
+        name='new-implementation'
+        label='New implementation address'
+        input={ newImplementationInput }
+      />
 
-      <div className={styles.details}>
-        <ul className={styles.nobullet}>
+      { proxyInput.isValid !== undefined || newImplementationInput.isValid === false
 
-          { proxyInput.isValid !== undefined
-            ? ( proxyInput.isValid
-              ? <li className={styles.success}>
-                <p className={styles.title}>This proxy is EIP 1967 compatible</p>
-              </li>
+        ? <div className={styles.details}>
+            <ul className={styles.nobullet}>
 
-              : <li className={styles.error}>
-                <p className={styles.title}>Invalid proxy address</p>
-                <p className={styles.description}>{ proxyInput.error }</p>
-              </li>
-            )
+              { proxyInput.isValid !== undefined
+                ? ( proxyInput.isValid
+                  ? <li className={styles.success}>
+                      <p className={styles.title}>This proxy is EIP 1967 compatible</p>
+                    </li>
 
-            : <></>
-          }
+                    : <li className={styles.error}>
+                      <p className={styles.title}>Invalid proxy address</p>
+                      <p id="proxy-input-error" className={styles.description}>{ proxyInput.error }</p>
+                    </li>
+                  )
+                : <></>
+              }
 
-          { newImplementationInput.isValid === false
-            ? <li className={styles.error}>
-              <p className={styles.title}>Invalid new implementation address</p>
-              <p className={styles.description}>{ newImplementationInput.error }</p>
-            </li>
-            : <></>
-          }
+              { newImplementationInput.isValid === false
+                ? <li className={styles.error}>
+                    <p className={styles.title}>Invalid new implementation address</p>
+                    <p id="new-implementation-input-error" className={styles.description}>{ newImplementationInput.error }</p>
+                  </li>
+                : <></>
+              }
 
-          <li className={styles.note}>
-            <p className={styles.title}>Tip: put contract upgrades behind a dark timelock</p>
-            <p className={styles.description}>Upgrades might be bugfixes, in which case revealing the upgrade would trivially reveal the bug, possibly leading to exploits.</p>
-          </li>
+            </ul>
+          </div>
+        : <></>
+      }
 
-        </ul>
-      </div>
       <footer><a href="https://docs.openzeppelin.com/upgrades" target="_blank" rel="noopener noreferrer">Powered by <img src="oz_icon.svg" alt="OpenZeppelin" /><b>OpenZeppelin</b> | Upgrades</a></footer>
     </div>
   )
