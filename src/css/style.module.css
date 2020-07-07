@@ -1,5 +1,4 @@
 body {
-  background: #F9FAFB;
   font-family: "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
   line-height: 24px;
   color: #575C66;
@@ -25,14 +24,42 @@ h5 {
   margin-top: 16px;
 }
 
+/* Button styles */
+
+button {
+  min-width: 5rem;
+  padding: 8px 24px;
+  background: #2C374B;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 1.2rem;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+button:hover:not(:disabled) {
+  background: #4E5DE4;
+  transition: 0.1s;
+}
+
+button:active:not(:disabled) {
+  background: #3D4A99;
+  transition: 0.1s;
+}
+
 .card {
-	background: white;
 	border-radius: 4px;
-	padding: 36px 48px;
-	margin: auto;
-	min-width: 620px;
-	height: fit-content;
-	box-shadow: 0px 4px 10px rgba(44, 55, 75, 0.1);
+	margin-right: auto;
+	max-width: 520px;
+	max-height: 428px;
 }
 
 .header {
@@ -93,8 +120,8 @@ h5 {
   min-width: 0;
   opacity: .8;
 }
-.delete:hover,
-.delete:focus {
+button.delete:hover:hover:not(:disabled),
+button.delete:focus:not(:disabled) {
   opacity: 1;
   background: #F5F6FF;
 }
@@ -140,21 +167,7 @@ h5 {
   box-sizing: border-box;
   border: 1px solid #D8DBE2;
   border-radius: 6px;
-  margin-top: 32px;
-}
-
-.details .header {
-  padding: 16px;
-  border-bottom: 1px solid #D8DBE2;
-}
-
-.details .header p {
-  font-weight: bold;
-  font-size: 10px;
-  line-height: 10px;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: #818998; 
+  margin-top: 24px;
 }
 
 .nobullet {
@@ -182,38 +195,7 @@ li .title {
 }
 
 li .description {
-  line-height: 1.2;
-}
-
-/* Button styles */
-
-button {
-  min-width: 5rem;
-  padding: 8px 24px;
-  background: #2C374B;
-  border: none;
-  border-radius: 4px;
-  color: white;
-  font-size: 14px;
-  font-weight: bold;
-  line-height: 1.2rem;
-  letter-spacing: 0.01em;
-  cursor: pointer;
-}
-
-button:disabled {
-  opacity: 0.6;
-  cursor: default;
-}
-
-button:hover:not(:disabled) {
-  background: #4E5DE4;
-  transition: 0.1s;
-}
-
-button:active:not(:disabled) {
-  background: #3D4A99;
-  transition: 0.1s;
+  line-height: 1.4;
 }
 
 /* oz footer */
