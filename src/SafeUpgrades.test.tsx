@@ -72,7 +72,7 @@ describe("SafeUpgrades", () => {
 
     wrapper.update()
 
-    expect(getInputError('proxy').text()).toBe("This contract is not an EIP 1967 compatible proxy")
+    expect(getInputError('proxy').text()).toBe("Only EIP1967-compatible proxies are supported")
   })
 
 
