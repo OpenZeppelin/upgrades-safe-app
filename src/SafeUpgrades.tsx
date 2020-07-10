@@ -26,7 +26,7 @@ const SafeUpgrades: React.FC<SafeUpgradesProps> = ({ safe, ethereum }) => {
     const Eip1967 = await ethereum.detect(address)
 
     if (Eip1967 === null) {
-      return err('This contract is not EIP 1967 compatible')
+      return err('Only EIP1967-compatible proxies are supported')
     }
 
     const safeAddress = safe.info?.safeAddress || ''
@@ -117,7 +117,7 @@ const SafeUpgrades: React.FC<SafeUpgradesProps> = ({ safe, ethereum }) => {
               { proxyInput.isValid !== undefined
                 ? ( proxyInput.isValid
                   ? <li className={styles.success}>
-                      <p className={styles.title}>This contract is EIP 1967 compatible</p>
+                      <p className={styles.title}>This contract is EIP1967-compatible</p>
                     </li>
 
                     : <li className={styles.error}>
