@@ -1,4 +1,4 @@
-# OpenZeppelin | Safe Upgrades App
+# OpenZeppelin | Upgrades Safe App
 
 ## Development
 Install dependencies and run the local development server by running
