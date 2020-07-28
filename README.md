@@ -1,5 +1,7 @@
 # OpenZeppelin | Upgrades Safe App
 
+Simple Gnosis Safe App that allows the user to upgrade a contract owned by the multisig by entering the proxy address and a new implementation.
+
 ## Development
 Install dependencies and run the local development server by running
 
