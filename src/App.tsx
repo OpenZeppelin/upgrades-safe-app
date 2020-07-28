@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import ReactGA from 'react-ga'
 import initSdk, { SafeInfo } from '@gnosis.pm/safe-apps-sdk'
 import EthereumBridge from './ethereum/EthereumBridge'
 
@@ -19,11 +18,6 @@ const App: React.FC = () => {
     safe.sdk.addListeners({ onSafeInfo: setSafeInfo })
     return () => safe.sdk.removeListeners()
   }, [safe.sdk])
-
-  useEffect(() => {
-    ReactGA.initialize('UA-85043059-8')
-    ReactGA.set({ anonymizeIp: true })
-  }, []);
 
   return (
     <div>

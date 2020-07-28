@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import ReactGA from 'react-ga'
 
 import Address from './ethereum/Address'
 import { ok, err } from './Result'
@@ -79,13 +78,6 @@ const SafeUpgrades: React.FC<SafeUpgradesProps> = ({ safe, ethereum }) => {
 
   const sendTransaction = () : void => {
     const tx = ethereum.buildUpgradeTransaction(proxyInput.address, newImplementationInput.address, proxyAdminAddress)
-
-    ReactGA.event({
-      category: proxyAdminAddress ? 'ProxyAdmin' : 'Proxy',
-      action: 'upgrade',
-      label:  safe.info?.network
-    })
-
     safe.sdk.sendTransactions([tx])
   }
 
