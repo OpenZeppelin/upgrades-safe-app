@@ -5,12 +5,13 @@ import EthereumBridge from './ethereum/EthereumBridge'
 import SafeUpgrades from './SafeUpgrades'
 import CircularProgress from '@material-ui/core/CircularProgress'
 
+const ethereum = new EthereumBridge()
+const safeSdk = initSdk()
 
 const App: React.FC = () => {
   const [safeInfo, setSafeInfo] = useState<SafeInfo>()
-  const ethereum = new EthereumBridge()
   const safe = {
-    sdk: initSdk([/.*localhost.*/]),
+    sdk: safeSdk,
     info: safeInfo
   }
 
