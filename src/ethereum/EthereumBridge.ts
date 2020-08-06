@@ -10,9 +10,14 @@ const ProxyAdminABI = require('./abis/ProxyAdmin.json')
 
 export default class EthereumBridge {
   private static _providerInstance: Provider
+  private static _network: string
 
   public static set provider(prov: Provider) {
     this._providerInstance = prov
+  }
+
+  public static set network(_network: string | undefined) {
+    this._network = _network || ''
   }
 
   public static get provider(): Provider {
@@ -20,7 +25,8 @@ export default class EthereumBridge {
 
     if (this._providerInstance === undefined) {
       if (REACT_APP_INFURA_KEY) {
-        this._providerInstance = new ethers.providers.InfuraProvider('homestead', REACT_APP_INFURA_KEY)
+        this._providerInstance = new ethers.providers.InfuraProvider(EthereumBridge._network, REACT_APP_INFURA_KEY)
+        console.log(this._network, REACT_APP_INFURA_KEY)
       } else {
         this._providerInstance = ethers.getDefaultProvider()
       }

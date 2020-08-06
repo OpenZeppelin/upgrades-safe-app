@@ -20,6 +20,11 @@ const App: React.FC = () => {
     return () => safe.sdk.removeListeners()
   }, [safe.sdk])
 
+  useEffect(() => {
+    const network = safe.info?.network
+    EthereumBridge.network = network === 'mainnet' ? 'homestead' : network
+  }, [safe.info])
+
   return (
     <div>
       {( safe.info || process.env.NODE_ENV === 'development'
