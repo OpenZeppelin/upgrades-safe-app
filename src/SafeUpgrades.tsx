@@ -120,7 +120,7 @@ const SafeUpgrades: React.FC<SafeUpgradesProps> = ({ safe, ethereum }) => {
                       <p className={styles.title}>This contract is EIP1967-compatible</p>
                     </li>
 
-                    : <li className={styles.error}>
+                  : <li className={styles.error}>
                       <p className={styles.title}>Invalid contract address</p>
                       <p id="proxy-input-error" className={styles.description}>{ proxyInput.error }</p>
                     </li>

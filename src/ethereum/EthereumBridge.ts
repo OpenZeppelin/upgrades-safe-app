@@ -17,13 +17,7 @@ export default class EthereumBridge {
 
   public static get provider(): Provider {
     if (this._providerInstance === undefined) {
-      const w: any = window
-
-      if (w.ethereum) {
-        this._providerInstance = new ethers.providers.Web3Provider(w.ethereum)
-      } else {
-        this._providerInstance = ethers.getDefaultProvider()
-      }
+      this._providerInstance = ethers.getDefaultProvider()
     }
 
     return this._providerInstance
