@@ -26,7 +26,6 @@ export default class EthereumBridge {
     if (this._providerInstance === undefined) {
       if (REACT_APP_INFURA_KEY) {
         this._providerInstance = new ethers.providers.InfuraProvider(EthereumBridge._network, REACT_APP_INFURA_KEY)
-        console.log(this._network, REACT_APP_INFURA_KEY)
       } else {
         this._providerInstance = ethers.getDefaultProvider()
       }
