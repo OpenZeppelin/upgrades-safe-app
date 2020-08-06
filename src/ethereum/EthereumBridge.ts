@@ -16,8 +16,14 @@ export default class EthereumBridge {
   }
 
   public static get provider(): Provider {
+    const { REACT_APP_INFURA_KEY } = process.env
+
     if (this._providerInstance === undefined) {
-      this._providerInstance = ethers.getDefaultProvider()
+      if (REACT_APP_INFURA_KEY) {
+        this._providerInstance = new ethers.providers.InfuraProvider('homestead', REACT_APP_INFURA_KEY)
+      } else {
+        this._providerInstance = ethers.getDefaultProvider()
+      }
     }
 
     return this._providerInstance
