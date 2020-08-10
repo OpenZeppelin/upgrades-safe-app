@@ -5,12 +5,13 @@ import EthereumBridge from './ethereum/EthereumBridge'
 import SafeUpgrades from './SafeUpgrades'
 import CircularProgress from '@material-ui/core/CircularProgress'
 
+const ethereum = new EthereumBridge()
+const safeSdk = initSdk()
 
 const App: React.FC = () => {
   const [safeInfo, setSafeInfo] = useState<SafeInfo>()
-  const ethereum = new EthereumBridge()
   const safe = {
-    sdk: initSdk([/.*localhost.*/]),
+    sdk: safeSdk,
     info: safeInfo
   }
 
@@ -18,6 +19,11 @@ const App: React.FC = () => {
     safe.sdk.addListeners({ onSafeInfo: setSafeInfo })
     return () => safe.sdk.removeListeners()
   }, [safe.sdk])
+
+  useEffect(() => {
+    const network = safe.info?.network
+    EthereumBridge.network = network === 'mainnet' ? 'homestead' : network
+  }, [safe.info])
 
   return (
     <div>
