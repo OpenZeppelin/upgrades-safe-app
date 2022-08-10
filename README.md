@@ -2,6 +2,8 @@
 
 Simple Gnosis Safe App that allows the user to upgrade a contract owned by the multisig by entering the proxy address and a new implementation.
 
+**Note: This app is unmaintained. See [OpenZeppelin Defender](https://docs.openzeppelin.com/defender/) for a more fully-featured alternative.**
+
 ## Development
 Install dependencies and run the local development server by running
 
