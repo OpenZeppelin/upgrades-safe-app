@@ -62,6 +62,17 @@ button:active:not(:disabled) {
 	max-height: 428px;
 }
 
+.note {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.note a {
+  color: #575C66;
+}
+
+.note a:hover { text-decoration: none; }
+
 .header {
   display: flex;
   flex-direction: row;

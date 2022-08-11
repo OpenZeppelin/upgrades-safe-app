@@ -83,8 +83,11 @@ const SafeUpgrades: React.FC<SafeUpgradesProps> = ({ safe, ethereum }) => {
 
   return (
     <div className={styles.card}>
-      <div className={styles.header}>
+      <div className={styles.note}>
+        <b>Note:</b> This app is unmaintained. See <a href="https://docs.openzeppelin.com/defender/" target="_blank">OpenZeppelin Defender</a> for a more fully-featured alternative.
+      </div>
 
+      <div className={styles.header}>
         <h4>Upgrade a contract</h4>
 
         <button
